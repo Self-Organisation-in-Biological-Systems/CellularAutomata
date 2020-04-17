@@ -10,8 +10,8 @@ public class Giraffe {
     private void run() {
         ControlFrame controlFrame = new ControlFrame();
 
-        GraphicFrame graphic = new GraphicFrame();
-        graphic.createGraphicFrame(controlFrame.getXSize(), controlFrame.getYSize());
+        GraphicFrame graphic = new GraphicFrame(controlFrame);
+        graphic.createGraphicFrame();
 
         Tick tick = new Tick(controlFrame, graphic);
         controlFrame.addButtonActionListeners(tick);

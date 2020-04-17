@@ -429,6 +429,34 @@ public class Tick {
     }
 
     public void mainDraw() {
-        mGraphic.drawGiraffeImage(cellCount, cellB, xSize);
+        mGraphic.mainDraw(this);
+    }
+
+    public int getCellCount() {
+        return cellCount;
+    }
+
+    public boolean getCellState(int i) {
+        return cellState[i];
+    }
+
+    public boolean getTryToActivateNeighbors(int i) {
+        return tryToActivateNeighbors[i];
+    }
+
+    public int getTickCount() {
+        return tickCount;
+    }
+
+    public double getStartA() {
+        return startA;
+    }
+
+    public double getCellA(int i) {
+        return cellA[i];
+    }
+
+    public double getCellB(int i) {
+        return cellB[i];
     }
 }
