@@ -8,6 +8,8 @@ import java.util.TimerTask;
 public class Tick {
     private ControlFrame mControlFrame;
     private GraphicFrame mGraphic;
+    private Timer mMainTimer;
+    private Timer mCheckThresholdTimer;
 
     public Tick(ControlFrame controlFrame, GraphicFrame graphic) {
         mControlFrame = controlFrame;
@@ -20,15 +22,15 @@ public class Tick {
     private int xSize = 200;
     private int ySize = 200;
     private double startA = 1.0;
-    private int aReplenish = 0;
+    private double aReplenish = 0.0;
     private double bDecay = 0;
     private double startOnPercent = 0.001;
     private double DiffusionRate = 1.0;
-    private int bDiffusionRate = 0;
+    private double bDiffusionRate = 0;
     private double reactionRate = 1.0;
     private double activationRate = 1;//chance of an active cell turning on its neighbors
     private double activationThreshold = 0.25; //min A value that a cell must have in order to be switched on, otherwise it will stay off
-    private int activationDelay = 10;
+    private double activationDelay = 10.0;
     private int drawEvery = 10;
     private int maxLifeTime = 1000;
     private int shutoffAThreshold = -1; //thee values will keep them from shutting off from thresholds
@@ -40,6 +42,7 @@ public class Tick {
     //fixme: add "load in a starting picture" to set starting UV values
     //fixme: add "load in another starting picture to set usable cells" (user can specify a non-rectangular picture)
 
+    private boolean running = false;
     private boolean paused = false;
     private int cellCount = xSize * ySize;//total number of cells being used in the simulation
     private double[] cellA;//level of molecule concentration in each cell
@@ -47,7 +50,7 @@ public class Tick {
     private double[] cellC;
     private int[] lifeTime;
     private boolean[] cellState; //true if on
-    private int[] cellActivationDelay;
+    private double[] cellActivationDelay;
     private int[] cellX; //xy drawing position, if an array lookup is faster than calculating while drawing it
     int[] cellY;
     private String[] cellColor;//to store fate of cell as a color if needed
@@ -91,10 +94,6 @@ public class Tick {
     }
 
     public void init() {
-        mControlFrame.addButtonActionListeners(this);
-
-        tickCount = 0;
-
         getUserVars();
 
         //get number of cells needed
@@ -109,7 +108,7 @@ public class Tick {
         cellState = new boolean[cellCount];
         cellColor = new String[cellCount];
         tryToActivateNeighbors = new boolean[cellCount];
-        cellActivationDelay = new int[cellCount];
+        cellActivationDelay = new double[cellCount];
 
         for (int i = 0; i < cellCount; i++) {
             cellX[i] = i % xSize;
@@ -210,35 +209,57 @@ public class Tick {
         paused = false;
     }
 
-    public void start() {
-        setTimeout(() -> init(), 10);
-        setTimeout(() -> tick(), 10);
-
-        new Timer().scheduleAtFixedRate(new TimerTask(){
+    private void resetTimers() {
+        mMainTimer = new Timer();
+        mMainTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void run(){
-                checkThreshold();
-            }
+            public void run() { tick(); }
+        },0,10);
+
+        mCheckThresholdTimer = new Timer();
+        mCheckThresholdTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() { checkThreshold(); }
         },0,500);
     }
 
-    public void pauseUnPause() {
-        paused = !paused;
-        if(!paused)
-            setTimeout(() -> tick(), 10);
+    public void start() {
+        init();
+        resetTimers();
+        tickCount = 0;
+        running = true;
     }
 
-    int ticks=0;
+    public void pauseUnPause() {
+        if(!running)
+            return;
+
+        boolean pausing = !paused;
+
+        if(pausing) {
+            if(mMainTimer != null)
+                mMainTimer.cancel();
+            if(mCheckThresholdTimer != null)
+                mCheckThresholdTimer.cancel();
+            paused = true;
+        } else  {
+            resetTimers();
+            paused = false;
+        }
+    }
+
     private void tick() {
+        if(paused)
+            return;
+
         try {
-            System.out.println("tick" + ticks++);
+            System.out.println("tick " + tickCount++);
             getUserVars();//fetches values so they can be changed as it's running
             double diffRate = DiffusionRate * 0.5; //allow user to use range of 0-1 but optimize calc speed
             double diffRateDiag = DiffusionRate * 0.5 * 0.707;
             double bDiffRate = bDiffusionRate * 0.5; //for B molecule if needed
             double bDiffRateDiag = bDiffusionRate * 0.5 * 0.707;
             double activationRateDiag = activationRate * 0.707;
-            tickCount++;
             for (int t = 0; t < cellCount; t++) {
                 //pick a cell
                 int cNum = (int) Math.floor(Math.random() * cellCount);
@@ -342,10 +363,10 @@ public class Tick {
                 //fixme: make cells shut off if their A level is below a certain amount or if B rises above a certain amount.
 
                 //replenish A if needed:
-                if ((aReplenish > 0) && (cellA[cNum] < 1.0))
+                if ((aReplenish > 0.0) && (cellA[cNum] < 1.0))
                     cellA[cNum] += aReplenish;
 
-                if ((aReplenish < 1) && (cellB[cNum] > 0))
+                if ((aReplenish < 1.0) && (cellB[cNum] > 0))
                     cellB[cNum] *= bDecay;
             }
 
@@ -363,11 +384,6 @@ public class Tick {
                     return;
                 }
             }
-
-            //set a timer to tick again
-            if(!paused)
-                setTimeout(() -> tick(), 10);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -379,7 +395,6 @@ public class Tick {
         pigmentThreshold = mControlFrame.getPigmentThreshold();
         if (lastThreshold != pigmentThreshold) {
             lastThreshold = pigmentThreshold;
-            setTimeout(() -> mainDraw(), 10);
         }
         useGiraffeColors = mControlFrame.drawInGiraffeColors();
         drawScaled = mControlFrame.drawScaledToMax();
@@ -411,19 +426,6 @@ public class Tick {
             }
         }
         mainDraw();
-    }
-
-    //PK added from https://stackoverflow.com/questions/26311470/what-is-the-equivalent-of-javascript-settimeout-in-java
-    public static void setTimeout(Runnable runnable, int delay){
-        new Thread(() -> {
-            try {
-                Thread.sleep(delay);
-                runnable.run();
-            }
-            catch (Exception e){
-                System.err.println(e);
-            }
-        }).start();
     }
 
     public void mainDraw() {

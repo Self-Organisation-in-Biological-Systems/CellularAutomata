@@ -15,14 +15,14 @@ public class ControlPanel3 extends JPanel {
     private int ySize = 200;
     private double startA = 1.0;
     private double startOnPercent = 0.001;
-    private int A_Replenish = 0;
+    private double A_Replenish = 0.0;
     private double DiffusionRate = 1.0;
-    private int B_DiffusionRate = 0;
+    private double B_DiffusionRate = 0.0;
     private double B_DecayRate = 0;
     private double reactionRate = 1.0;
-    private int activationRate = 1;
+    private double activationRate = 1.0;
     private double activationThreshold = 0.25;
-    private int activationDelay = 10;
+    private double activationDelay = 10.0;
     private int maxLifeTime = 1000;
     private int shutoffAThreshold = -1;
     private int shutoffBThreshold = 10;
@@ -142,14 +142,14 @@ public class ControlPanel3 extends JPanel {
         ySizeTextField.setText(Integer.toString(ySize));
         startATextField.setText(Double.toString(startA));
         startOnPercentTextField.setText(Double.toString(startOnPercent));
-        AReplenishTextField.setText(Integer.toString(A_Replenish));
+        AReplenishTextField.setText(Double.toString(A_Replenish));
         DiffusionRateTextField.setText(Double.toString(DiffusionRate));
-        BDiffusionRateTextField.setText(Integer.toString(B_DiffusionRate));
+        BDiffusionRateTextField.setText(Double.toString(B_DiffusionRate));
         BDecayRateTextField.setText(Double.toString(B_DecayRate));
         reactionRateTextField.setText(Double.toString(reactionRate));
-        activationRateTextField.setText(Integer.toString(activationRate));
+        activationRateTextField.setText(Double.toString(activationRate));
         activationThresholdTextField.setText(Double.toString(activationThreshold));
-        activationDelayTextField.setText(Integer.toString(activationDelay));
+        activationDelayTextField.setText(Double.toString(activationDelay));
         maxLifeTimeTextField.setText(Integer.toString(maxLifeTime));
         shutoffAThresholdTextField.setText(Integer.toString(shutoffAThreshold));
         shutoffBThresholdTextField.setText(Integer.toString(shutoffBThreshold));
@@ -171,14 +171,12 @@ public class ControlPanel3 extends JPanel {
     public double getStartOnPercent() {
         return Double.parseDouble(startOnPercentTextField.getText());
     }
-    public int getAReplenish() {
-        return Integer.parseInt(AReplenishTextField.getText());
-    }
+    public double getAReplenish() { return Double.parseDouble(AReplenishTextField.getText()); }
     public double getDiffusionRate() {
         return Double.parseDouble(DiffusionRateTextField.getText());
     }
-    public int getBDiffusionRate() {
-        return Integer.parseInt(BDiffusionRateTextField.getText());
+    public double getBDiffusionRate() {
+        return Double.parseDouble(BDiffusionRateTextField.getText());
     }
     public double getBDecayRate() {
         return Double.parseDouble(BDecayRateTextField.getText());
@@ -186,15 +184,13 @@ public class ControlPanel3 extends JPanel {
     public double getReactionRate() {
         return Double.parseDouble(reactionRateTextField.getText());
     }
-    public int getActivationRate() {
-        return Integer.parseInt(activationRateTextField.getText());
+    public double getActivationRate() {
+        return Double.parseDouble(activationRateTextField.getText());
     }
     public double getActivationThreshold() {
         return Double.parseDouble(activationThresholdTextField.getText());
     }
-    public int getActivationDelay() {
-        return Integer.parseInt(activationDelayTextField.getText());
-    }
+    public double getActivationDelay() { return Double.parseDouble(activationDelayTextField.getText()); }
     public int getMaxLifeTime() {
         return Integer.parseInt(maxLifeTimeTextField.getText());
     }

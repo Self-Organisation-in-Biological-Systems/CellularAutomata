@@ -49,13 +49,11 @@ public class ControlFrame {
     public double getStartOnPercent() {
         return controlPanel3.getStartOnPercent();
     }
-    public int getAReplenish() {
-        return controlPanel3.getAReplenish();
-    }
+    public double getAReplenish() { return controlPanel3.getAReplenish(); }
     public double getDiffusionRate() {
         return controlPanel3.getDiffusionRate();
     }
-    public int getBDiffusionRate() {
+    public double getBDiffusionRate() {
         return controlPanel3.getBDiffusionRate();
     }
     public double getBDecayRate() {
@@ -64,11 +62,11 @@ public class ControlFrame {
     public double getReactionRate() {
         return controlPanel3.getReactionRate();
     }
-    public int getActivationRate() {
+    public double getActivationRate() {
         return controlPanel3.getActivationRate();
     }
     public double getActivationThreshold() { return controlPanel3.getActivationThreshold(); }
-    public int getActivationDelay() {
+    public double getActivationDelay() {
         return controlPanel3.getActivationDelay();
     }
     public int getMaxLifeTime() {
