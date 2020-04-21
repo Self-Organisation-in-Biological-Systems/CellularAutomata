@@ -10,6 +10,8 @@ public class GraphicFrame extends JPanel {
     private ControlFrame mControlFrame;
     private BufferedImage mGiraffeImage;
 
+    private double scaleFactor=2.5;
+
     public GraphicFrame(ControlFrame controlFrame) {
         mControlFrame = controlFrame;
     }
@@ -21,7 +23,7 @@ public class GraphicFrame extends JPanel {
         frame = new JFrame("Welcome to Giraffe World!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(mControlFrame.getXSize(), mControlFrame.getYSize());
+        frame.setSize((int)(mControlFrame.getXSize()*scaleFactor), (int)(mControlFrame.getYSize()*scaleFactor));
 
         JPanel panel = new GiraffeJPanel();
         frame.add(panel);
@@ -30,8 +32,13 @@ public class GraphicFrame extends JPanel {
     }
 
     class GiraffeJPanel extends JPanel {
-        @Override
+        //@Override
         public void paintComponent(Graphics g) {
+//            super.paintComponent(g);
+//            g.drawImage(mGiraffeImage, 0, 0, null);
+
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.scale(scaleFactor, scaleFactor);
             super.paintComponent(g);
             g.drawImage(mGiraffeImage, 0, 0, null);
         }
@@ -187,10 +194,20 @@ public class GraphicFrame extends JPanel {
         int g = 0;
         int b = 0;
         for (int i = 0; i < tick.getCellCount(); i++) {
-            if (tick.getCellB(i) > mControlFrame.getPigmentThreshold())
-                { r=209; g=111; b=46;}
+//            if (tick.getCellB(i) > mControlFrame.getPigmentThreshold())
+//                { r=209; g=111; b=46;}
+//            else
+//                { r=255; g=255; b=255;}
+
+            if (tick.getCellB(i) > 1.0)
+                { r=209; g=3; b=3;}
+            else if (tick.getCellB(i) > 0.8)
+                { r=3; g=111; b=3;}
+            else if (tick.getCellB(i) > 0.5)
+                { r=209; g=3; b=3;}
             else
-                { r=255; g=255; b=255;}
+                { r=0; g=0; b=0;}
+
             mGiraffeImage.setRGB(x, y, new Color(r,g,b).getRGB());
             x++; //track cell location where we are drawing
             if (x >= mControlFrame.getXSize()) {

@@ -112,19 +112,62 @@ public class Tick {
 
         for (int i = 0; i < cellCount; i++) {
             cellX[i] = i % xSize;
-            cellY[i] = (int)Math.floor(i / ySize);
+            cellY[i] = (int) Math.floor(i / ySize);
             cellA[i] = startA;
             cellB[i] = 0;
             cellC[i] = 0;
             lifeTime[i] = maxLifeTime;
             cellActivationDelay[i] = activationDelay;
 
-            if (myRandom() < startOnPercent) {
-                cellState[i] = true;
-                tryToActivateNeighbors[i] = true;
-            } else {
-                cellState[i] = false;
-                tryToActivateNeighbors[i] = false;
+            if (mControlFrame.drawGiraffePattern()) {
+                if (myRandom() < startOnPercent) {
+                    cellState[i] = true;
+                    tryToActivateNeighbors[i] = true;
+                } else {
+                    cellState[i] = false;
+                    tryToActivateNeighbors[i] = false;
+                }
+
+            } else if (mControlFrame.drawSingletonPattern()) {
+                int j = mControlFrame.getXSize()/2 + mControlFrame.getXSize()*(mControlFrame.getYSize())/2;
+                cellState[j] = true;
+                tryToActivateNeighbors[j] = true;
+
+            } else if (mControlFrame.drawWeirdPhylloPattern()) {
+                double n = 0; // ordering number of object
+                double phi; // divergence phiAngle
+                double r; // radius from origin to object center
+                double xPos, yPos; // shape positions
+                double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+                double C = 3; // scaling factor
+                while (n < 1000) {
+                    phi = Math.toRadians(n * phiAngle);
+                    r = C * Math.sqrt(n);
+                    xPos = (300) + (r * Math.cos(phi));
+                    yPos = (300) + (r * Math.sin(phi));
+                    int j = (int) xPos * (int) yPos / 4;
+                    cellState[j] = true;
+                    tryToActivateNeighbors[j] = true;
+                    n++;
+                }
+
+            } else if (mControlFrame.drawPhylloPattern()) {
+                double n = 0; // ordering number of object
+                double phi; // divergence phiAngle
+                double r; // radius from origin to object center
+                double xPos, yPos; // shape positions
+                double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+                double C = 3; // scaling factor
+                while (n < 600) {
+                    phi = Math.toRadians(n * phiAngle);
+                    r = C * Math.sqrt(n);
+                    xPos = (100) + (r * Math.cos(phi));
+                    yPos = (100) + (r * Math.sin(phi));
+                    int j = (int) xPos + (int) yPos * mControlFrame.getXSize();
+                    cellState[j] = true;
+                    tryToActivateNeighbors[j] = true;
+                    n++;
+                }
             }
 
             cellColor[i] = "#000000";

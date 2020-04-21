@@ -18,6 +18,9 @@ public class Giraffe {
     }
 }
 
+//https://www.quora.com/Did-anybody-figure-out-why-flowers-follow-Fibonacci-numbers
+//https://stackoverflow.com/questions/26141237/how-to-create-phyllotaxis-spirals-with-r/28309226
+
 //https://www.mpawars.com/post/do-you-know-nature-also-likes-to-stay-in-order
 
 //https://www.groundai.com/project/from-natural-to-artificial-camouflage-components-and-systems/1

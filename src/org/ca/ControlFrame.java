@@ -7,24 +7,52 @@ public class ControlFrame {
     private ControlPanel2 controlPanel2;
     private ControlPanel3 controlPanel3;
     private ControlPanel4 controlPanel4;
+    private ControlPanel5 controlPanel5;
 
     public ControlFrame() {
         JFrame f = new JFrame("Giraffe pattern");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
+        JTabbedPane jTabbedPane = new javax.swing.JTabbedPane();
+        JPanel jPanel1 = new javax.swing.JPanel();
+        JPanel jPanel2 = new javax.swing.JPanel();
+        JPanel jPanel3 = new javax.swing.JPanel();
+        JPanel jPanel4 = new javax.swing.JPanel();
+        JPanel jPanel5 = new javax.swing.JPanel();
 
+        f.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setLayout(null);
         controlPanel1 = new ControlPanel1();
-        f.add(controlPanel1);
-        controlPanel2 = new ControlPanel2();
-        f.add(controlPanel2);
-        controlPanel3 = new ControlPanel3();
-        f.add(controlPanel3);
-        controlPanel4 = new ControlPanel4();
-        f.add(controlPanel4);
+        jTabbedPane.addTab("Run", controlPanel1);
 
-        f.add(Box.createVerticalGlue());
+        jPanel2.setLayout(null);
+        controlPanel2 = new ControlPanel2();
+        jTabbedPane.addTab("Colors", controlPanel2);
+
+        jPanel5.setLayout(null);
+        controlPanel5 = new ControlPanel5();
+        jTabbedPane.addTab("Patterns", controlPanel5);
+
+        jPanel3.setLayout(null);
+        controlPanel3 = new ControlPanel3();
+        jTabbedPane.addTab("Cellular Automata Settings", controlPanel3);
+
+        jPanel4.setLayout(null);
+        controlPanel4 = new ControlPanel4();
+        jTabbedPane.addTab("File", controlPanel4);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(f.getContentPane());
+        f.getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTabbedPane)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTabbedPane)
+        );
+
+        f.setLocation(520,100);
         f.pack();
-        f.setLocationRelativeTo(null);
         f.setVisible(true);
     }
 
@@ -80,4 +108,15 @@ public class ControlFrame {
     }
 
     public void addButtonActionListeners(Tick tick) { controlPanel1.addButtonActionListeners(tick); }
+
+    public boolean drawGiraffePattern() { return controlPanel5.drawGiraffePattern(); }
+    public boolean drawSingletonPattern() {
+        return controlPanel5.drawSingletonPattern();
+    }
+    public boolean drawWeirdPhylloPattern() {
+        return controlPanel5.drawWeirdPhylloPattern();
+    }
+    public boolean drawPhylloPattern() {
+        return controlPanel5.drawPhylloPattern();
+    }
 }
