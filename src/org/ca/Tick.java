@@ -62,7 +62,7 @@ public class Tick {
     private boolean useGiraffeColors = true;
     private boolean drawScaled = false;
     private int histoBanding = 0;
-    private int pigmentThreshold;
+    private double pigmentThreshold;
 
     private void getUserVars() {
         histoBanding = 0;
@@ -132,6 +132,26 @@ public class Tick {
                 int j = mControlFrame.getXSize()/2 + mControlFrame.getXSize()*(mControlFrame.getYSize())/2;
                 cellState[j] = true;
                 tryToActivateNeighbors[j] = true;
+
+            } else if (mControlFrame.drawHexPattern()) {
+                int c=0;
+                for(int xPos=20; xPos<mControlFrame.getXSize()-20; xPos+=20) {
+                    for(int yPos=20; yPos<mControlFrame.getYSize()-20; yPos+=20) {
+                        int offset = (++c%2==0 ? 10 : 0);
+                        int j = (int) xPos+offset + (int) yPos * mControlFrame.getXSize();
+                        cellState[j] = true;
+                        tryToActivateNeighbors[j] = true;
+                    }
+                }
+
+            } else if (mControlFrame.drawGridPattern()) {
+                for(int xPos=20; xPos<mControlFrame.getXSize()-20; xPos+=20) {
+                    for(int yPos=0; yPos<mControlFrame.getYSize()-20; yPos+=20) {
+                        int j = (int) xPos + (int) yPos * mControlFrame.getXSize();
+                        cellState[j] = true;
+                        tryToActivateNeighbors[j] = true;
+                    }
+                }
 
             } else if (mControlFrame.drawWeirdPhylloPattern()) {
                 double n = 0; // ordering number of object
@@ -307,6 +327,7 @@ public class Tick {
                 //pick a cell
                 int cNum = (int) Math.floor(Math.random() * cellCount);
                 //diffuse A
+                //double dryUpRate = 0.1; //TODO added by paul
                 int totalNeighbors = cellNeighbor[cNum].length + cellDiagNeighbor[cNum].length;
                 double dSelf = (cellA[cNum]) / totalNeighbors;
                 for (int i = 0; i < cellDiagNeighbor[cNum].length; i++) {
@@ -314,14 +335,14 @@ public class Tick {
                     double dN = (cellA[nNum]) / totalNeighbors;//get diffusable value in neighbor
                     double swap = (dSelf - dN) * diffRateDiag; //determine amount to be exchanged
                     cellA[cNum] -= swap;//exchange it
-                    cellA[nNum] += swap;
+                    cellA[nNum] += swap;//*dryUpRate;
                 }
                 for (int i = 0; i < cellNeighbor[cNum].length; i++) {
                     int nNum = cellNeighbor[cNum][i];
                     double dN = (cellA[nNum]) / totalNeighbors;//get diffusable value in neighbor
                     double swap = (dSelf - dN) * diffRate; //determine amount to be exchanged
                     cellA[cNum] -= swap;//exchange it
-                    cellA[nNum] += swap;
+                    cellA[nNum] += swap;//*dryUpRate;
                 }
 
 
@@ -432,7 +453,7 @@ public class Tick {
         }
     }
 
-    private int lastThreshold = 0;
+    private double lastThreshold = 0.0;
 
     private void checkThreshold() {
         pigmentThreshold = mControlFrame.getPigmentThreshold();

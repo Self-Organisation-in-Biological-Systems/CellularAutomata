@@ -65,9 +65,7 @@ public class ControlFrame {
     public int getYSize() {
         return controlPanel3.getYSize();
     }
-    public int getPigmentThreshold() {
-        return controlPanel3.getPigmentThreshold();
-    }
+    public double getPigmentThreshold() { return controlPanel3.getPigmentThreshold(); }
     public int getDawEveryNthCycle() {
         return controlPanel3.getDawEveryNthCycle();
     }
@@ -119,4 +117,12 @@ public class ControlFrame {
     public boolean drawPhylloPattern() {
         return controlPanel5.drawPhylloPattern();
     }
+    public boolean drawGridPattern() {
+        return controlPanel5.drawGridPattern();
+    }
+    public boolean drawHexPattern() {
+        return controlPanel5.drawHexPattern();
+    }
+
+
 }

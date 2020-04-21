@@ -159,8 +159,8 @@ public class ControlPanel3 extends JPanel {
         return Integer.parseInt(xSizeTextField.getText());
     }
     public int getYSize() { return Integer.parseInt(ySizeTextField.getText()); }
-    public int getPigmentThreshold() {
-        return Integer.parseInt(pigmentThresholdTextField.getText());
+    public double getPigmentThreshold() {
+        return Double.parseDouble(pigmentThresholdTextField.getText());
     }
     public int getDawEveryNthCycle() {
         return Integer.parseInt(drawEveryNthCycleTextField.getText());
