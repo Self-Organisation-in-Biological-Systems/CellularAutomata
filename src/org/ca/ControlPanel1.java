@@ -11,6 +11,7 @@ public class ControlPanel1 extends JPanel {
     private JButton pauseUnpauseEndButton = new JButton("pause/unpause/end");
     private JButton redrawPictureButton = new JButton("Redraw picture");
     private JButton smoothEdgesButton = new JButton("Smooth Edges");
+    private JButton showDotPatternButton = new JButton("Show Dot Pattern");
 
     public ControlPanel1() {
         this.setBorder(BorderFactory.createEmptyBorder());
@@ -25,7 +26,8 @@ public class ControlPanel1 extends JPanel {
                                 .addComponent(restartFromZeroButton)
                                 .addComponent(pauseUnpauseEndButton)
                                 .addComponent(redrawPictureButton)
-                                .addComponent(smoothEdgesButton))
+                                .addComponent(smoothEdgesButton)
+                                .addComponent(showDotPatternButton))
         );
 
         layout.setVerticalGroup(layout.createSequentialGroup()
@@ -33,7 +35,8 @@ public class ControlPanel1 extends JPanel {
                                 .addComponent(restartFromZeroButton)
                                 .addComponent(pauseUnpauseEndButton)
                                 .addComponent(redrawPictureButton)
-                                .addComponent(smoothEdgesButton))
+                                .addComponent(smoothEdgesButton)
+                                .addComponent(showDotPatternButton))
         );
     }
 
@@ -63,6 +66,13 @@ public class ControlPanel1 extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 tick.diffuseB();
+            }
+        });
+
+        showDotPatternButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tick.showDotPattern();
             }
         });
     }

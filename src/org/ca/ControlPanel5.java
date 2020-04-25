@@ -13,8 +13,11 @@ public class ControlPanel5 extends JPanel {
     private JRadioButton singletonPatternButton;
     private JRadioButton gridPatternButton;
     private JRadioButton hexPatternButton;
+    private JRadioButton irregularHexPatternButton;
     private JRadioButton weirdPhylloPatternButton;
     private JRadioButton phylloPatternButton;
+    private JRadioButton concentricCirclePatternButton;
+    private JCheckBox gradientCheckBox;
 
     public ControlPanel5() {
         buttonGroup = new ButtonGroup();
@@ -31,11 +34,19 @@ public class ControlPanel5 extends JPanel {
         hexPatternButton = new JRadioButton("hex pattern");
         buttonGroup.add(hexPatternButton);
 
+        irregularHexPatternButton = new JRadioButton("irregular hex pattern");
+        buttonGroup.add(irregularHexPatternButton);
+
         weirdPhylloPatternButton = new JRadioButton("weird Phyllo pattern");
         buttonGroup.add(weirdPhylloPatternButton);
 
         phylloPatternButton = new JRadioButton("Phyllo pattern");
         buttonGroup.add(phylloPatternButton);
+
+        concentricCirclePatternButton = new JRadioButton("Concentric circles");
+        buttonGroup.add(concentricCirclePatternButton);
+
+        gradientCheckBox = new JCheckBox("Apply gradient");
 
         setBorder(BorderFactory.createEmptyBorder());
 
@@ -59,6 +70,12 @@ public class ControlPanel5 extends JPanel {
         add(gridPatternButton, gbc);
         gbc.gridy++;
         add(hexPatternButton, gbc);
+        gbc.gridy++;
+        add(irregularHexPatternButton, gbc);
+        gbc.gridy++;
+        add(concentricCirclePatternButton, gbc);
+        gbc.gridy++;
+        add(gradientCheckBox, gbc);
 
         setValues();
     }
@@ -70,7 +87,10 @@ public class ControlPanel5 extends JPanel {
         phylloPatternButton.setSelected(false);
         gridPatternButton.setSelected(false);
         hexPatternButton.setSelected(false);
+        irregularHexPatternButton.setSelected(false);
+        concentricCirclePatternButton.setSelected(false);
 
+        gradientCheckBox.setSelected(false);
     }
 
     public boolean drawGiraffePattern() {
@@ -87,5 +107,8 @@ public class ControlPanel5 extends JPanel {
     }
     public boolean drawGridPattern() { return gridPatternButton.isSelected(); }
     public boolean drawHexPattern() { return hexPatternButton.isSelected(); }
+    public boolean drawIrregularHexPattern() { return irregularHexPatternButton.isSelected(); }
+    public boolean drawConcentricCirclePattern() { return concentricCirclePatternButton.isSelected(); }
 
+    public boolean applyGradient() { return gradientCheckBox.isSelected(); }
 }

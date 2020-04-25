@@ -2,8 +2,7 @@ package org.ca;
 
 //http://serpwidgets.com/giraffes/giraffealgorithm.htm
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Tick {
     private ControlFrame mControlFrame;
@@ -118,81 +117,266 @@ public class Tick {
             cellC[i] = 0;
             lifeTime[i] = maxLifeTime;
             cellActivationDelay[i] = activationDelay;
-
-            if (mControlFrame.drawGiraffePattern()) {
-                if (myRandom() < startOnPercent) {
-                    cellState[i] = true;
-                    tryToActivateNeighbors[i] = true;
-                } else {
-                    cellState[i] = false;
-                    tryToActivateNeighbors[i] = false;
-                }
-
-            } else if (mControlFrame.drawSingletonPattern()) {
-                int j = mControlFrame.getXSize()/2 + mControlFrame.getXSize()*(mControlFrame.getYSize())/2;
-                cellState[j] = true;
-                tryToActivateNeighbors[j] = true;
-
-            } else if (mControlFrame.drawHexPattern()) {
-                int c=0;
-                for(int xPos=20; xPos<mControlFrame.getXSize()-20; xPos+=20) {
-                    for(int yPos=20; yPos<mControlFrame.getYSize()-20; yPos+=20) {
-                        int offset = (++c%2==0 ? 10 : 0);
-                        int j = (int) xPos+offset + (int) yPos * mControlFrame.getXSize();
-                        cellState[j] = true;
-                        tryToActivateNeighbors[j] = true;
-                    }
-                }
-
-            } else if (mControlFrame.drawGridPattern()) {
-                for(int xPos=20; xPos<mControlFrame.getXSize()-20; xPos+=20) {
-                    for(int yPos=0; yPos<mControlFrame.getYSize()-20; yPos+=20) {
-                        int j = (int) xPos + (int) yPos * mControlFrame.getXSize();
-                        cellState[j] = true;
-                        tryToActivateNeighbors[j] = true;
-                    }
-                }
-
-            } else if (mControlFrame.drawWeirdPhylloPattern()) {
-                double n = 0; // ordering number of object
-                double phi; // divergence phiAngle
-                double r; // radius from origin to object center
-                double xPos, yPos; // shape positions
-                double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
-                double C = 3; // scaling factor
-                while (n < 1000) {
-                    phi = Math.toRadians(n * phiAngle);
-                    r = C * Math.sqrt(n);
-                    xPos = (300) + (r * Math.cos(phi));
-                    yPos = (300) + (r * Math.sin(phi));
-                    int j = (int) xPos * (int) yPos / 4;
-                    cellState[j] = true;
-                    tryToActivateNeighbors[j] = true;
-                    n++;
-                }
-
-            } else if (mControlFrame.drawPhylloPattern()) {
-                double n = 0; // ordering number of object
-                double phi; // divergence phiAngle
-                double r; // radius from origin to object center
-                double xPos, yPos; // shape positions
-                double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
-                double C = 3; // scaling factor
-                while (n < 600) {
-                    phi = Math.toRadians(n * phiAngle);
-                    r = C * Math.sqrt(n);
-                    xPos = (100) + (r * Math.cos(phi));
-                    yPos = (100) + (r * Math.sin(phi));
-                    int j = (int) xPos + (int) yPos * mControlFrame.getXSize();
-                    cellState[j] = true;
-                    tryToActivateNeighbors[j] = true;
-                    n++;
-                }
-            }
-
-            cellColor[i] = "#000000";
         }
 
+        if (mControlFrame.drawGiraffePattern())
+            drawGiraffePattern();
+        else if (mControlFrame.drawSingletonPattern())
+            drawSingletonPattern();
+        else if (mControlFrame.drawHexPattern())
+            drawHexPattern();
+        else if (mControlFrame.drawIrregularHexPattern())
+            drawIrregularHexPattern();
+        else if (mControlFrame.drawGridPattern())
+            drawGridPattern();
+        else if (mControlFrame.drawWeirdPhylloPattern())
+            drawWeirdPhylloPattern();
+        else if (mControlFrame.drawConcentricCirclePattern())
+            drawConcentricCirclePattern();
+        else if (mControlFrame.drawPhylloPattern())
+            drawPhylloPattern();
+
+        if (mControlFrame.applyGradient())
+            applyGradient();
+
+        recalculateNeighbors();
+
+        paused = false;
+    }
+
+    private void drawGiraffePattern() {
+        for (int i = 0; i < cellCount; i++) {
+            if (myRandom() < startOnPercent) {
+                cellState[i] = true;
+                tryToActivateNeighbors[i] = true;
+            } else {
+                cellState[i] = false;
+                tryToActivateNeighbors[i] = false;
+            }
+        }
+    }
+
+    private void drawSingletonPattern() {
+        for (int i = 0; i < cellCount; i++) {
+            int j = xSize / 2 + xSize * (ySize) / 2;
+            cellState[j] = true;
+            tryToActivateNeighbors[j] = true;
+        }
+    }
+
+    private void drawHexPattern() {
+        int c = 0;
+        for (int xPos = 20; xPos < xSize - 20; xPos += 20) {
+            for (int yPos = 20; yPos < ySize - 20; yPos += 20) {
+                int offset = (++c % 2 == 0 ? 10 : 0);
+                int j = (int) xPos + offset + (int) yPos * ySize;
+                cellState[j] = true;
+                tryToActivateNeighbors[j] = true;
+            }
+        }
+    }
+
+    private void drawTortoiseShellPattern() {
+
+    }
+    private void drawIrregularHexPattern() {
+        int c = 0;
+        for (int x = 20; x < xSize - 20; x += 20) {
+            for (int y = 20; y < ySize - 20; y += 20) {
+                int xPos = x;
+                int yPos = y;
+                int n = 3;
+                if (Math.random() < 0.33) xPos -= n;
+                else if (Math.random() > 0.67) xPos += n;
+                if (Math.random() < 0.33) yPos -= n;
+                else if (Math.random() > 0.67) yPos += n;
+
+                int offset = (++c % 2 == 0 ? 10 : 0);
+                int j = xPos + offset + yPos * ySize;
+                cellState[j] = true;
+                tryToActivateNeighbors[j] = true;
+            }
+        }
+    }
+
+    private void drawGridPattern() {
+        for (int xPos = 20; xPos < xSize - 20; xPos += 20) {
+            for (int yPos = 20; yPos < ySize - 20; yPos += 20) {
+                int j = xPos + yPos * ySize;
+                cellState[j] = true;
+                tryToActivateNeighbors[j] = true;
+            }
+        }
+    }
+
+    private void drawWeirdPhylloPattern() {
+        double n = 0; // ordering number of object
+        double phi; // divergence phiAngle
+        double r; // radius from origin to object center
+        double xPos, yPos; // shape positions
+        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+        double C = 3; // scaling factor
+        while (n < 1000) {
+            phi = Math.toRadians(n * phiAngle);
+            r = C * Math.sqrt(n);
+            xPos = (300) + (r * Math.cos(phi));
+            yPos = (300) + (r * Math.sin(phi));
+            int j = (int) xPos * (int) yPos / 4;
+            cellState[j] = true;
+            tryToActivateNeighbors[j] = true;
+            n++;
+        }
+    }
+
+    private void drawPhylloPattern() {
+        double n = 0; // ordering number of object
+        double phi; // divergence phiAngle
+        double r; // radius from origin to object center
+        double xPos, yPos; // shape positions
+        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+        double C = 3; // scaling factor
+        while (n < 600) {
+            phi = Math.toRadians(n * phiAngle);
+            r = C * Math.sqrt(n);
+            xPos = (100) + (r * Math.cos(phi));
+            yPos = (100) + (r * Math.sin(phi));
+            int j = (int) xPos + (int) yPos * ySize;
+            cellState[j] = true;
+            tryToActivateNeighbors[j] = true;
+            n++;
+        }
+    }
+
+
+    ///////////////////////
+    //
+    //CODE PLASTIC very cool
+    //
+    //http://www.codeplastic.com/2017/09/09/controlled-circle-packing-with-processing/
+    //https://www.youtube.com/watch?v=SSWudanJc7c&t=5s
+    //https://entagma.com/packing-the-torus/
+    //
+    //////////////////////
+
+
+    private void drawConcentricCirclePattern() {
+//        Double[] radius = {0.0,0.1,0.2};
+//        Integer[] numberOfDots = {1,10,20};
+//        Double[] theta = new Double[3];
+//
+//        //get angles for each concentric circle
+//        for (int i=0; i<3; i++) {
+//            theta[i] = 2 * Math.PI/numberOfDots[i];
+//        }
+//
+//        for (int i=0; i<3; i++) {
+//            double radius = R[i];
+//            for (int i=0; i<3; i++) {
+//                double xPos = Math.round(R[i] * Math.cos(t[i]));
+//                double yPos = Math.round(R[i] * Math.sin(t[i]));
+//                int j = (int) xPos + (int) yPos * ySize;
+//                cellState[j] = true;
+//                tryToActivateNeighbors[j] = true;
+//            }
+//        }
+    }
+
+    private void applyGradient() {
+        List<Integer> cellsOn = new LinkedList<>();
+        int xsize = mControlFrame.getXSize();
+        int ysize = mControlFrame.getYSize();
+
+        for (int y = 0; y < ysize; y++) {
+
+            //count cells on in each row
+            cellsOn.clear();
+            ;
+            for (int x = 0; x < xsize; x++) {
+                int i = x + y * ySize;
+                if (cellState[i])
+                    cellsOn.add(i);
+            }
+
+            //determine the percentage of cells to turn off in each row
+            double pct = 0.0;
+            if (y < ysize * 0.10) pct = 0.0;
+            else if (y < ysize * 0.15) pct = 30.0;
+            else if (y < ysize * 0.20) pct = 70.0;
+            else if (y < ysize * 0.30) pct = 80.0;
+            else if (y < ysize * 0.35) pct = 95.0;
+            else if (y < ysize * 0.40) pct = 97.0;
+            else if (y < ysize * 0.50) pct = 98.0;
+            else if (y < ysize * 0.60) pct = 96.0;
+            else if (y < ysize * 0.70) pct = 80.0;
+            else if (y < ysize * 0.80) pct = 70.0;
+            else if (y < ysize * 0.90) pct = 30.0;
+            else pct = ysize * 0.0;
+
+            int numCellsToTurnOff = (int) Math.round(cellsOn.size() * (pct / 100.0));
+
+            //turn off a percentage of cells randomly in each row
+            Collections.shuffle(cellsOn);
+            for (int c = 0; c < numCellsToTurnOff; c++) {
+                int i = cellsOn.get(c);
+                cellState[i] = false;
+            }
+        }
+    }
+
+//    private void applyLinearGradient(double gradient) {
+//        for(int i=0; i<cellCount; i++) {
+//            if(cellState[i]) {
+//                int xPos = i % xSize;
+//                int yPos = i / ySize;
+//                //int k = (int) xPos + (int) yPos * ySize;
+//                yPos += (int)(yPos * gradient);
+//                int j = xPos + yPos * ySize;
+//                cellState[i] = false;
+//                tryToActivateNeighbors[i] = false;
+//                if (j < cellCount) {
+//                    cellState[j] = true;
+//                    tryToActivateNeighbors[j] = true;
+//                }
+//            }
+//        }
+//    }
+
+//    private void applyLinearGradient() {
+//        List<Integer> cellsOn = new LinkedList<>();
+//        int xsize = mControlFrame.getXSize();
+//        int ysize = mControlFrame.getYSize();
+//
+//        for(int y = ysize-1; y >= 0; y--) {
+//
+//            //count cells on in each row
+//            cellsOn.clear();;
+//            for (int x=0; x<xsize; x++) {
+//                int i = x + y * ySize;
+//                if(cellState[i])
+//                    cellsOn.add(i);
+//            }
+//
+//            //determine the percentage of cells to turn off in each row
+//            //double pct = (double)(ysize - y) / ysize; //linear
+//            double pct = 100-(double)Math.pow((ysize - y), 1.65) / ysize; //exponential
+//            for(int p=0; p<Math.round(pct); p++)
+//                System.out.print(" ");
+////            if(pct > 1.0)
+////                pct = 1.0;
+//            int numCellsToTurnOff = (int)Math.round(cellsOn.size() * (pct/100.0));
+//            System.out.println(String.format("pct=%.1f numCellsToTurnOff=%d", pct, numCellsToTurnOff));
+//
+//            //turn off a percentage of cells randomly in each row
+//            Collections.shuffle(cellsOn);
+//            for (int c=0; c<numCellsToTurnOff; c++) {
+//                int i = cellsOn.get(c);
+//                cellState[i] = false;
+//            }
+//        }
+//    }
+
+
+    private void recalculateNeighbors() {
         //recalculate neighbors, but only if size changed (fixme add size change detection if calculating neighbors is lengthy)
         cellNeighbor = new int[cellCount][4];
         cellDiagNeighbor = new int[cellCount][4];
@@ -268,15 +452,13 @@ public class Tick {
         cellNeighbor[z][0] = z - 1;
         cellNeighbor[z][1] = z - xSize;
         cellDiagNeighbor[z][0] = z - (xSize + 1);
-
-        paused = false;
     }
 
-    private void resetTimers() {
+    private void startTicking() {
         mMainTimer = new Timer();
         mMainTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void run() { tick(); }
+            public void run() { tick(true); }
         },0,10);
 
         mCheckThresholdTimer = new Timer();
@@ -288,9 +470,15 @@ public class Tick {
 
     public void start() {
         init();
-        resetTimers();
+        startTicking();
         tickCount = 0;
         running = true;
+    }
+
+    public void showDotPattern() {
+        init();
+        tickCount = 0;
+        tick(false);
     }
 
     public void pauseUnPause() {
@@ -306,12 +494,12 @@ public class Tick {
                 mCheckThresholdTimer.cancel();
             paused = true;
         } else  {
-            resetTimers();
+            startTicking();
             paused = false;
         }
     }
 
-    private void tick() {
+    private void tick(boolean doDiffusion) {
         if(paused)
             return;
 
@@ -434,17 +622,17 @@ public class Tick {
                     cellB[cNum] *= bDecay;
             }
 
-            if (tickCount % drawEvery == 0) {
+            if (tickCount % drawEvery == 0 || !doDiffusion) {
                 mainDraw();
                 //also check to see if all cells are off, if not a single cell is on, the simulation is over
-                boolean simEnded = true;
-                for (int i = 0; i < cellCount; i++) {
-                    if (cellState[i]) {
-                        simEnded = false;
-                        break;
-                    }
-                }
-                if (simEnded) {
+//                boolean simEnded = true;
+//                for (int i = 0; i < cellCount; i++) {
+//                    if (cellState[i]) {
+//                        simEnded = false;
+//                        break;
+//                    }
+//                }
+                if (!doDiffusion) {
                     return;
                 }
             }

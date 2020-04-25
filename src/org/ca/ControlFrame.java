@@ -123,6 +123,15 @@ public class ControlFrame {
     public boolean drawHexPattern() {
         return controlPanel5.drawHexPattern();
     }
+    public boolean drawIrregularHexPattern() {
+        return controlPanel5.drawIrregularHexPattern();
+    }
+    public boolean drawConcentricCirclePattern() {
+        return controlPanel5.drawConcentricCirclePattern();
+    }
 
 
+    public boolean applyGradient() {
+        return controlPanel5.applyGradient();
+    }
 }
