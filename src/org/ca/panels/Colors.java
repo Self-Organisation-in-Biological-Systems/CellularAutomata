@@ -1,4 +1,4 @@
-package org.ca;
+package org.ca.panels;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
-public class ControlPanel2 extends JPanel {
+public class Colors extends JPanel {
     private boolean drawInGiraffColors = true;
     private boolean drawScaledToMax = false;
     private int banding = 0;
@@ -23,7 +23,7 @@ public class ControlPanel2 extends JPanel {
     private JLabel bandingLabel = new JLabel("Banding:", JLabel.RIGHT);
     private JTextField bandingTextField = new JTextField(5);
 
-    public ControlPanel2() {
+    public Colors() {
         this.setBorder(BorderFactory.createEmptyBorder());
 
             GroupLayout layout = new GroupLayout(this);

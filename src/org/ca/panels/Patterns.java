@@ -1,4 +1,4 @@
-package org.ca;
+package org.ca.panels;
 
 import javax.swing.*;
 
@@ -6,7 +6,7 @@ import java.awt.*;
 
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
-public class ControlPanel5 extends JPanel {
+public class Patterns extends JPanel {
     private final ButtonGroup buttonGroup;
 
     private JRadioButton giraffePatternButton;
@@ -19,7 +19,7 @@ public class ControlPanel5 extends JPanel {
     private JRadioButton concentricCirclePatternButton;
     private JCheckBox gradientCheckBox;
 
-    public ControlPanel5() {
+    public Patterns() {
         buttonGroup = new ButtonGroup();
 
         giraffePatternButton = new JRadioButton("Giraffe pattern");

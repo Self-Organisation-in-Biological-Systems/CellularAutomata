@@ -1,5 +1,7 @@
 package org.ca;
 
+import org.ca.panels.ControlFrame;
+
 public class Giraffe {
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package org.ca;
+package org.ca.panels;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,13 +10,13 @@ import javax.swing.filechooser.FileFilter;
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
-public class ControlPanel4 extends JPanel {
+public class FilePanel extends JPanel {
     private JButton loadButton = new JButton("Load");
     private JButton saveButton = new JButton("Save");
     private JButton resetButton = new JButton("Reset");
     private JFileChooser fileChooser;
 
-    public ControlPanel4() {
+    public FilePanel() {
         setBorder(BorderFactory.createEmptyBorder());
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -49,7 +49,7 @@ public class ControlPanel4 extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fileChooser.showOpenDialog((Component)e.getSource());
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
+                    java.io.File file = fileChooser.getSelectedFile();
                     try {
                         String fileName = file.toString();
                         System.out.println(fileName);
@@ -68,7 +68,7 @@ public class ControlPanel4 extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fileChooser.showSaveDialog((Component)e.getSource());
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
+                    java.io.File file = fileChooser.getSelectedFile();
                     try {
                         String fileName = file.toString();
                         System.out.println(fileName);
@@ -118,7 +118,7 @@ public class ControlPanel4 extends JPanel {
             return description;
         }
 
-        public boolean accept(File file) {
+        public boolean accept(java.io.File file) {
             if (file.isDirectory()) {
                 return true;
             } else {

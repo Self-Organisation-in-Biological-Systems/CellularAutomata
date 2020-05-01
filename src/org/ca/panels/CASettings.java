@@ -1,14 +1,14 @@
-package org.ca;
+package org.ca.panels;
+
+import org.ca.GraphicFrame;
+import org.ca.Tick;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import static javax.swing.GroupLayout.Alignment.BASELINE;
-import static javax.swing.GroupLayout.Alignment.LEADING;
-
-public class ControlPanel3 extends JPanel {
+public class CASettings extends JPanel {
     private int pigmentThreshold = 0;
     private int drawEveryNthCycle = 10;
     private int xSize = 200;
@@ -95,7 +95,7 @@ public class ControlPanel3 extends JPanel {
     private JTextField shutoffBThresholdTextField = new JTextField(5);
     private JLabel shutoffBThresholdLabel2 = new JLabel("A cell will switch off if its B value exceeds this number.");
 
-    public ControlPanel3() {
+    public CASettings() {
         this.setBorder(BorderFactory.createEmptyBorder());
 
         GridBagLayout layout = new GridBagLayout();

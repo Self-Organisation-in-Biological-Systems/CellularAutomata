@@ -2,6 +2,8 @@ package org.ca;
 
 //http://serpwidgets.com/giraffes/giraffealgorithm.htm
 
+import org.ca.panels.ControlFrame;
+
 import java.util.*;
 
 public class Tick {
@@ -63,10 +65,15 @@ public class Tick {
     private int histoBanding = 0;
     private double pigmentThreshold;
 
-    private void getUserVars() {
-        histoBanding = 0;
+    private boolean getUserVars() {
+        boolean graphicsSizeChanged = false;
+        int oldXSize = xSize;
+        int oldYSize = ySize;
         xSize = mControlFrame.getXSize();
         ySize = mControlFrame.getYSize();
+        if(xSize != oldXSize || ySize != oldYSize)
+            graphicsSizeChanged = true;
+        histoBanding = 0;
         aReplenish = mControlFrame.getAReplenish();
         bDecay = 1.0 - mControlFrame.getBDecayRate();
         DiffusionRate = mControlFrame.getDiffusionRate();
@@ -85,6 +92,8 @@ public class Tick {
         showCellStates = mControlFrame.showCellStates();
         startOnPercent = mControlFrame.getStartOnPercent();
         startA = mControlFrame.getStartA();
+
+        return graphicsSizeChanged;
     }
 
     //deterministic number generator so we can see varied results with identical starting conditions but different settings
@@ -469,6 +478,10 @@ public class Tick {
     }
 
     public void start() {
+        boolean graphicsSizeChanged = getUserVars();
+        if(graphicsSizeChanged) {
+            mGraphic.createGraphicFrame();
+        }
         init();
         startTicking();
         tickCount = 0;
@@ -479,6 +492,16 @@ public class Tick {
         init();
         tickCount = 0;
         tick(false);
+    }
+
+    public void stop() {
+        if(!running)
+            return;
+
+        if(mMainTimer != null)
+            mMainTimer.cancel();
+        if(mCheckThresholdTimer != null)
+            mCheckThresholdTimer.cancel();
     }
 
     public void pauseUnPause() {
@@ -504,8 +527,8 @@ public class Tick {
             return;
 
         try {
-            System.out.println("tick " + tickCount++);
-            getUserVars();//fetches values so they can be changed as it's running
+            //System.out.println("tick " + tickCount++);
+            //getUserVars();//fetches values so they can be changed as it's running
             double diffRate = DiffusionRate * 0.5; //allow user to use range of 0-1 but optimize calc speed
             double diffRateDiag = DiffusionRate * 0.5 * 0.707;
             double bDiffRate = bDiffusionRate * 0.5; //for B molecule if needed
@@ -621,6 +644,13 @@ public class Tick {
                 if ((aReplenish < 1.0) && (cellB[cNum] > 0))
                     cellB[cNum] *= bDecay;
             }
+
+            for(int col=0; col<ySize; col++) {
+                int row = 10;
+                int i = row + col * ySize;
+                System.out.print(String.format("%2d,%-2d %s ", (int)(cellA[i]*10), (int)(cellB[i]*10), (cellState[i]?"*":" ")));
+            }
+            System.out.println();
 
             if (tickCount % drawEvery == 0 || !doDiffusion) {
                 mainDraw();

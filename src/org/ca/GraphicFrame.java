@@ -1,18 +1,21 @@
 package org.ca;
 
+import org.ca.panels.ControlFrame;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GraphicFrame extends JPanel {
-    JFrame frame;
+    JFrame mGraphicsFrame;
     private ControlFrame mControlFrame;
     private BufferedImage mGiraffeImage;
 
-    private double scaleFactor=2.5;
+    //private double scaleFactor=2.5;
 
     public GraphicFrame(ControlFrame controlFrame) {
+        mGraphicsFrame = new JFrame("Welcome to Giraffe World!");
         mControlFrame = controlFrame;
     }
 
@@ -20,15 +23,15 @@ public class GraphicFrame extends JPanel {
         mGiraffeImage = new BufferedImage(mControlFrame.getXSize(), mControlFrame.getYSize(),
                 BufferedImage.TYPE_INT_ARGB);
 
-        frame = new JFrame("Welcome to Giraffe World!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setSize((int)(mControlFrame.getXSize()*scaleFactor), (int)(mControlFrame.getYSize()*scaleFactor));
+        mGraphicsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mGraphicsFrame.setVisible(true);
+        //mGraphicsFrame.setSize((int)(mControlFrame.getXSize()*scaleFactor), (int)(mControlFrame.getYSize()*scaleFactor));
+        mGraphicsFrame.setSize((int)(mControlFrame.getXSize()), (int)(mControlFrame.getYSize()));
 
         JPanel panel = new GiraffeJPanel();
-        frame.add(panel);
-        frame.validate();
-        frame.repaint();
+        mGraphicsFrame.add(panel);
+        mGraphicsFrame.validate();
+        mGraphicsFrame.repaint();
     }
 
     class GiraffeJPanel extends JPanel {
@@ -38,7 +41,7 @@ public class GraphicFrame extends JPanel {
 //            g.drawImage(mGiraffeImage, 0, 0, null);
 
             Graphics2D g2d = (Graphics2D) g;
-            g2d.scale(scaleFactor, scaleFactor);
+            //g2d.scale(scaleFactor, scaleFactor);
             super.paintComponent(g);
             g.drawImage(mGiraffeImage, 0, 0, null);
         }
@@ -129,8 +132,8 @@ public class GraphicFrame extends JPanel {
             }
         }
 
-        frame.validate();
-        frame.repaint();
+        mGraphicsFrame.validate();
+        mGraphicsFrame.repaint();
     }
 
     private void drawAsGiraffe(Tick tick) {
