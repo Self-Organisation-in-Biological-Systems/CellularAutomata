@@ -9,7 +9,8 @@ public class ModelSettingsIO {
     private Gson mGson;
     private ObjectMapper mMapper;
 
-    public ModelSettingsIO() {
+    public ModelSettingsIO(ModelSettings settings) {
+        mSettings = settings;
         mGson = new Gson();
         mMapper = new ObjectMapper();
     }

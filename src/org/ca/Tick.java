@@ -23,24 +23,6 @@ public class Tick {
     // FIXME: add the capability to have a user-defined list of starting "on" cells so that a specific pattern can be replicated//add histogram view
     //add a-replenish rate as an option
 
-//    private int xSize = 200;
-//    private int ySize = 200;
-//    private double startA = 1.0;
-//    private double aReplenish = 0.0;
-//    private double bDecay = 0;
-//    private double startOnPercent = 0.001;
-//    private double DiffusionRate = 1.0;
-//    private double bDiffusionRate = 0;
-//    private double reactionRate = 1.0;
-//    private double activationRate = 1;//chance of an active cell turning on its neighbors
-//    private double activationThreshold = 0.25; //min A value that a cell must have in order to be switched on, otherwise it will stay off
-//    private double activationDelay = 10.0;
-//    private int drawEvery = 10;
-//    private int maxLifeTime = 1000;
-//    private int shutoffAThreshold = -1; //thee values will keep them from shutting off from thresholds
-//    private int shutoffBThreshold = 10;
-//    private boolean showCellStates = false;
-
     //fixme: add U replenish and V decay options just for the fun of it
     //fixme: once this works exactly like a regular UV R-D system, also add migrating activation to try and generate corn pattens
     //fixme: add "load in a starting picture" to set starting UV values
@@ -49,26 +31,11 @@ public class Tick {
     private boolean running = false;
     private boolean paused = false;
 
-//    private int cellCount = xSize * ySize;//total number of cells being used in the simulation
-//    private double[] cellA;//level of molecule concentration in each cell
-//    private double[] cellB;
-//    private double[] cellC;
-//    private int[] lifeTime;
-//    private boolean[] cellState; //true if on
-//    private double[] cellActivationDelay;
-//    private int[] cellX; //xy drawing position, if an array lookup is faster than calculating while drawing it
-//    int[] cellY;
-//    private String[] cellColor;//to store fate of cell as a color if needed
-//    private int[][] cellNeighbor; //array of indices of neighboring adjacent cells
-//    private int[][] cellDiagNeighbor; //array of indices of neighboring diagonal cells
-//    private boolean[] tryToActivateNeighbors; //true for only the first time it is turned on, then set to false
-
     private int isRunning = 0;
     private int tickCount;//how many cycles have elapsed
     private boolean useGiraffeColors = true;
     private boolean drawScaled = false;
     private int histoBanding = 0;
-//    private double pigmentThreshold;
 
     private boolean getUserVars() {
         boolean graphicsSizeChanged = false;
@@ -91,30 +58,6 @@ public class Tick {
     public void init() {
         getUserVars();
 
-//        //get number of cells needed
-//        cellCount = xSize * ySize;
-//        //empty out the arrays and randomize their contents
-//        cellA = new double[cellCount];
-//        cellB = new double[cellCount];
-//        cellC = new double[cellCount];
-//        cellX = new int[cellCount];
-//        cellY = new int[cellCount];
-//        lifeTime = new int[cellCount];
-//        cellState = new boolean[cellCount];
-//        cellColor = new String[cellCount];
-//        tryToActivateNeighbors = new boolean[cellCount];
-//        cellActivationDelay = new double[cellCount];
-//
-//        for (int i = 0; i < mState.getCellCount(); i++) {
-//            cellX[i] = i % xSize;
-//            cellY[i] = (int) Math.floor(i / ySize);
-//            cellA[i] = startA;
-//            cellB[i] = 0;
-//            cellC[i] = 0;
-//            lifeTime[i] = maxLifeTime;
-//            cellActivationDelay[i] = activationDelay;
-//        }
-
         if (mSettings.drawGiraffePattern())
             drawGiraffePattern();
         else if (mSettings.drawSingletonPattern())
@@ -134,8 +77,6 @@ public class Tick {
 
         if (mSettings.applyGradient())
             applyGradient();
-
-//        recalculateNeighbors();
 
         paused = false;
     }
@@ -318,137 +259,6 @@ public class Tick {
             }
         }
     }
-
-//    private void applyLinearGradient(double gradient) {
-//        for(int i=0; i<cellCount; i++) {
-//            if(cellState[i]) {
-//                int xPos = i % xSize;
-//                int yPos = i / ySize;
-//                //int k = (int) xPos + (int) yPos * ySize;
-//                yPos += (int)(yPos * gradient);
-//                int j = xPos + yPos * ySize;
-//                cellState[i] = false;
-//                tryToActivateNeighbors[i] = false;
-//                if (j < cellCount) {
-//                    cellState[j] = true;
-//                    tryToActivateNeighbors[j] = true;
-//                }
-//            }
-//        }
-//    }
-
-//    private void applyLinearGradient() {
-//        List<Integer> cellsOn = new LinkedList<>();
-//        int xsize = mSettings.getXSize();
-//        int ysize = mSettings.getYSize();
-//
-//        for(int y = ysize-1; y >= 0; y--) {
-//
-//            //count cells on in each row
-//            cellsOn.clear();;
-//            for (int x=0; x<xsize; x++) {
-//                int i = x + y * ySize;
-//                if(cellState[i])
-//                    cellsOn.add(i);
-//            }
-//
-//            //determine the percentage of cells to turn off in each row
-//            //double pct = (double)(ysize - y) / ysize; //linear
-//            double pct = 100-(double)Math.pow((ysize - y), 1.65) / ysize; //exponential
-//            for(int p=0; p<Math.round(pct); p++)
-//                System.out.print(" ");
-////            if(pct > 1.0)
-////                pct = 1.0;
-//            int numCellsToTurnOff = (int)Math.round(cellsOn.size() * (pct/100.0));
-//            System.out.println(String.format("pct=%.1f numCellsToTurnOff=%d", pct, numCellsToTurnOff));
-//
-//            //turn off a percentage of cells randomly in each row
-//            Collections.shuffle(cellsOn);
-//            for (int c=0; c<numCellsToTurnOff; c++) {
-//                int i = cellsOn.get(c);
-//                cellState[i] = false;
-//            }
-//        }
-//    }
-
-
-//    private void recalculateNeighbors() {
-//        //recalculate neighbors, but only if size changed (fixme add size change detection if calculating neighbors is lengthy)
-//        cellNeighbor = new int[cellCount][4];
-//        cellDiagNeighbor = new int[cellCount][4];
-//        for (int x = 1; x < (xSize - 1); x++) { //all the interior cells have all neighbors
-//            for (int y = 1; y < (ySize - 1); y++) {
-//                int i = (y * xSize) + x;
-//                cellNeighbor[i][0] = i - 1;
-//                cellNeighbor[i][1] = i + 1;
-//                cellNeighbor[i][2] = i - xSize;
-//                cellNeighbor[i][3] = i + xSize;
-//                cellDiagNeighbor[i][0] = i - (xSize + 1);
-//                cellDiagNeighbor[i][1] = i - (xSize - 1);
-//                cellDiagNeighbor[i][2] = i + (xSize + 1);
-//                cellDiagNeighbor[i][3] = i + (xSize - 1);
-//            }
-//        }
-//        //optimize for special cases
-//        //cells on the top row don't have neighbors above
-//        for (int i = 1; i < (xSize - 1); i++) {
-//            cellNeighbor[i][0] = i - 1;
-//            cellNeighbor[i][1] = i + 1;
-//            cellNeighbor[i][2] = i + xSize;
-//            cellDiagNeighbor[i][0] = i + (xSize + 1);
-//            cellDiagNeighbor[i][1] = i + (xSize - 1);
-//        }
-//        //cells on the bottom row don't have neighbors below
-//        int y = (xSize * (ySize - 1));
-//        for (int i = 1; i < (xSize - 1); i++) {
-//            int z = i + y;
-//            cellNeighbor[z][0] = z - 1;
-//            cellNeighbor[z][1] = z + 1;
-//            cellNeighbor[z][2] = z - xSize;
-//            cellDiagNeighbor[z][0] = z - (xSize + 1);
-//            cellDiagNeighbor[z][1] = z - (xSize - 1);
-//        }
-//        //cells on the left row don't have neighbors to the left
-//        for (int i = 1; i < (ySize - 1); i++) {
-//            int z = (i * xSize);
-//            cellNeighbor[z][0] = z + 1;
-//            cellNeighbor[z][1] = z - xSize;
-//            cellNeighbor[z][2] = z + xSize;
-//            cellDiagNeighbor[z][0] = (z - xSize) + 1;
-//            cellDiagNeighbor[z][1] = (z + xSize) + 1;
-//        }
-//        //cells on the right row don't have neighbors to the right
-//        for (int i = 1; i < (ySize - 1); i++) {
-//            int z = ((i + 1) * xSize) - 1;
-//            cellNeighbor[z][0] = z - 1;
-//            cellNeighbor[z][1] = z - xSize;
-//            cellNeighbor[z][2] = z + xSize;
-//            cellDiagNeighbor[z][0] = z - (xSize + 1);
-//            cellDiagNeighbor[z][1] = z + (xSize - 1);
-//        }
-//        //the four corners are also special cases
-//        //top left
-//        cellNeighbor[0][0] = 1;
-//        cellNeighbor[0][1] = xSize;
-//        cellDiagNeighbor[0][0] = xSize + 1;
-//
-//        //top right
-//        cellNeighbor[xSize - 1][0] = xSize - 2;
-//        cellNeighbor[xSize - 1][1] = (xSize * 2) - 2;
-//        cellDiagNeighbor[xSize - 1][0] = (xSize * 2) - 1;
-//
-//        //bottom left
-//        int z = (xSize * (ySize - 1));
-//        cellNeighbor[z][0] = z + 1;
-//        cellNeighbor[z][1] = z - xSize;
-//        cellDiagNeighbor[z][0] = z - (xSize - 1);
-//
-//        //bottom right
-//        z = cellCount - 1;
-//        cellNeighbor[z][0] = z - 1;
-//        cellNeighbor[z][1] = z - xSize;
-//        cellDiagNeighbor[z][0] = z - (xSize + 1);
-//    }
 
     private void startTicking() {
         mMainTimer = new Timer();

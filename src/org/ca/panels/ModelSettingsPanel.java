@@ -249,10 +249,6 @@ public class ModelSettingsPanel extends JPanel {
 
         String extensions[];
 
-        public ExtensionFileFilter(String description, String extension) {
-            this(description, new String[] { extension });
-        }
-
         public ExtensionFileFilter(String description, String extensions[]) {
             if (description == null) {
                 this.description = extensions[0];

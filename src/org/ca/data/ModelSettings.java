@@ -36,7 +36,7 @@ public class ModelSettings {
     private ModelSettingsIO mModelSettingsIO;
 
     public ModelSettings() {
-        mModelSettingsIO = new ModelSettingsIO();
+        mModelSettingsIO = new ModelSettingsIO(this);
         reset();
     }
 
