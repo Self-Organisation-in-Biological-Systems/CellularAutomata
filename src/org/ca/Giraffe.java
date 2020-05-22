@@ -1,5 +1,7 @@
 package org.ca;
 
+import org.ca.data.ModelSettings;
+import org.ca.data.ModelState;
 import org.ca.panels.ControlFrame;
 
 public class Giraffe {
@@ -10,12 +12,15 @@ public class Giraffe {
     }
 
     private void run() {
+        ModelSettings modelSettings = new ModelSettings();
+        ModelState modelState = new ModelState(modelSettings);
+
         ControlFrame controlFrame = new ControlFrame();
 
         GraphicFrame graphic = new GraphicFrame(controlFrame);
         graphic.createGraphicFrame();
 
-        Tick tick = new Tick(controlFrame, graphic);
+        Tick tick = new Tick(modelState, modelSettings, controlFrame, graphic);
         controlFrame.addButtonActionListeners(tick);
     }
 }
