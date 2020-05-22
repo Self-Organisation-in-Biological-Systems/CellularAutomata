@@ -632,12 +632,12 @@ public class Tick {
                     mState.multiplyCellB(cNum, 1.0-mSettings.getBDecay());
             }
 
-            for(int col=0; col<mSettings.getXSize(); col++) {
-                int row = 10;
-                int i = row + col * mSettings.getYSize();
-                System.out.print(String.format("%2d,%-2d %s ", (int)(mState.getCellA(i)*10), (int)(mState.getCellB(i)*10), (mState.getCellState(i)?"*":" ")));
-            }
-            System.out.println();
+//            for(int col=0; col<mSettings.getXSize(); col++) {
+//                int row = 10;
+//                int i = row + col * mSettings.getYSize();
+//                System.out.print(String.format("%2d,%-2d %s ", (int)(mState.getCellA(i)*10), (int)(mState.getCellB(i)*10), (mState.getCellState(i)?"*":" ")));
+//            }
+//            System.out.println();
 
             if (tickCount % mSettings.getDrawEvery() == 0 || !doDiffusion) {
                 mainDraw();
