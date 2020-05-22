@@ -33,8 +33,15 @@ public class ModelSettings {
     private boolean mDrawConcentricCirclePattern;
     private boolean mApplyGradient;
 
+    private ModelSettingsIO mModelSettingsIO;
+
     public ModelSettings() {
+        mModelSettingsIO = new ModelSettingsIO();
         reset();
+    }
+
+    public ModelSettingsIO getModelSettingsIO() {
+        return mModelSettingsIO;
     }
 
     public void reset() {

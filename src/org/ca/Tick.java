@@ -4,14 +4,12 @@ package org.ca;
 
 import org.ca.data.ModelSettings;
 import org.ca.data.ModelState;
-import org.ca.panels.ControlFrame;
 
 import java.util.*;
 
 public class Tick {
     private ModelState mState;
     private ModelSettings mSettings;
-    private ControlFrame mControlFrame;
     private GraphicFrame mGraphic;
     private Timer mMainTimer;
     private Timer mCheckThresholdTimer;
@@ -19,30 +17,29 @@ public class Tick {
     public Tick(ModelState modelState, ModelSettings settings, ControlFrame controlFrame, GraphicFrame graphic) {
         mState = modelState;
         mSettings = settings;
-        mControlFrame = controlFrame;
         mGraphic = graphic;
     }
 
     // FIXME: add the capability to have a user-defined list of starting "on" cells so that a specific pattern can be replicated//add histogram view
     //add a-replenish rate as an option
 
-    private int xSize = 200;
-    private int ySize = 200;
-    private double startA = 1.0;
-    private double aReplenish = 0.0;
-    private double bDecay = 0;
-    private double startOnPercent = 0.001;
-    private double DiffusionRate = 1.0;
-    private double bDiffusionRate = 0;
-    private double reactionRate = 1.0;
-    private double activationRate = 1;//chance of an active cell turning on its neighbors
-    private double activationThreshold = 0.25; //min A value that a cell must have in order to be switched on, otherwise it will stay off
-    private double activationDelay = 10.0;
-    private int drawEvery = 10;
-    private int maxLifeTime = 1000;
-    private int shutoffAThreshold = -1; //thee values will keep them from shutting off from thresholds
-    private int shutoffBThreshold = 10;
-    private boolean showCellStates = false;
+//    private int xSize = 200;
+//    private int ySize = 200;
+//    private double startA = 1.0;
+//    private double aReplenish = 0.0;
+//    private double bDecay = 0;
+//    private double startOnPercent = 0.001;
+//    private double DiffusionRate = 1.0;
+//    private double bDiffusionRate = 0;
+//    private double reactionRate = 1.0;
+//    private double activationRate = 1;//chance of an active cell turning on its neighbors
+//    private double activationThreshold = 0.25; //min A value that a cell must have in order to be switched on, otherwise it will stay off
+//    private double activationDelay = 10.0;
+//    private int drawEvery = 10;
+//    private int maxLifeTime = 1000;
+//    private int shutoffAThreshold = -1; //thee values will keep them from shutting off from thresholds
+//    private int shutoffBThreshold = 10;
+//    private boolean showCellStates = false;
 
     //fixme: add U replenish and V decay options just for the fun of it
     //fixme: once this works exactly like a regular UV R-D system, also add migrating activation to try and generate corn pattens
@@ -71,35 +68,17 @@ public class Tick {
     private boolean useGiraffeColors = true;
     private boolean drawScaled = false;
     private int histoBanding = 0;
-    private double pigmentThreshold;
+//    private double pigmentThreshold;
 
     private boolean getUserVars() {
         boolean graphicsSizeChanged = false;
-        int oldXSize = xSize;
-        int oldYSize = ySize;
-        xSize = mControlFrame.getXSize();
-        ySize = mControlFrame.getYSize();
-        if(xSize != oldXSize || ySize != oldYSize)
-            graphicsSizeChanged = true;
+        int oldXSize = mSettings.getXSize();
+        int oldYSize = mSettings.getYSize();
+
+//        if(xSize != oldXSize || ySize != oldYSize)
+//            graphicsSizeChanged = true;
         histoBanding = 0;
-        aReplenish = mControlFrame.getAReplenish();
-        bDecay = 1.0 - mControlFrame.getBDecayRate();
-        DiffusionRate = mControlFrame.getDiffusionRate();
-        reactionRate = mControlFrame.getReactionRate();
-        activationRate = mControlFrame.getActivationRate();
-        activationThreshold = mControlFrame.getActivationThreshold();
-        activationDelay = mControlFrame.getActivationDelay();
-        drawEvery = mControlFrame.getDawEveryNthCycle();
-        bDiffusionRate = mControlFrame.getBDiffusionRate();
-        useGiraffeColors = mControlFrame.drawInGiraffeColors();
-        drawScaled = mControlFrame.drawScaledToMax();
-        pigmentThreshold = mControlFrame.getPigmentThreshold();
-        maxLifeTime = mControlFrame.getMaxLifeTime();
-        shutoffAThreshold = mControlFrame.getShutoffAThreshold();
-        shutoffBThreshold = mControlFrame.getShutoffBThreshold();
-        showCellStates = mControlFrame.showCellStates();
-        startOnPercent = mControlFrame.getStartOnPercent();
-        startA = mControlFrame.getStartA();
+
 
         return graphicsSizeChanged;
     }
@@ -136,24 +115,24 @@ public class Tick {
 //            cellActivationDelay[i] = activationDelay;
 //        }
 
-        if (mControlFrame.drawGiraffePattern())
+        if (mSettings.drawGiraffePattern())
             drawGiraffePattern();
-//        else if (mControlFrame.drawSingletonPattern())
-//            drawSingletonPattern();
-//        else if (mControlFrame.drawHexPattern())
-//            drawHexPattern();
-//        else if (mControlFrame.drawIrregularHexPattern())
-//            drawIrregularHexPattern();
-//        else if (mControlFrame.drawGridPattern())
-//            drawGridPattern();
-//        else if (mControlFrame.drawWeirdPhylloPattern())
-//            drawWeirdPhylloPattern();
-//        else if (mControlFrame.drawConcentricCirclePattern())
+        else if (mSettings.drawSingletonPattern())
+            drawSingletonPattern();
+        else if (mSettings.drawHexPattern())
+            drawHexPattern();
+        else if (mSettings.drawIrregularHexPattern())
+            drawIrregularHexPattern();
+        else if (mSettings.drawGridPattern())
+            drawGridPattern();
+        else if (mSettings.drawWeirdPhylloPattern())
+            drawWeirdPhylloPattern();
+//        else if (mSettings.drawConcentricCirclePattern())
 //            drawConcentricCirclePattern();
-//        else if (mControlFrame.drawPhylloPattern())
-//            drawPhylloPattern();
+        else if (mSettings.drawPhylloPattern())
+            drawPhylloPattern();
 
-        if (mControlFrame.applyGradient())
+        if (mSettings.applyGradient())
             applyGradient();
 
 //        recalculateNeighbors();
@@ -163,7 +142,7 @@ public class Tick {
 
     private void drawGiraffePattern() {
         for (int i = 0; i < mState.getCellCount(); i++) {
-            if (myRandom() < startOnPercent) {
+            if (myRandom() < mSettings.getStartOnPercent()) {
                 mState.setCellState(i, true);
                 mState.setTryToActivateNeighbors(i, true);
             } else {
@@ -173,98 +152,98 @@ public class Tick {
         }
     }
 
-//    private void drawSingletonPattern() {
-//        for (int i = 0; i < cellCount; i++) {
-//            int j = xSize / 2 + xSize * (ySize) / 2;
-//            cellState[j] = true;
-//            tryToActivateNeighbors[j] = true;
-//        }
-//    }
-//
-//    private void drawHexPattern() {
-//        int c = 0;
-//        for (int xPos = 20; xPos < xSize - 20; xPos += 20) {
-//            for (int yPos = 20; yPos < ySize - 20; yPos += 20) {
-//                int offset = (++c % 2 == 0 ? 10 : 0);
-//                int j = (int) xPos + offset + (int) yPos * ySize;
-//                cellState[j] = true;
-//                tryToActivateNeighbors[j] = true;
-//            }
-//        }
-//    }
-//
-//    private void drawTortoiseShellPattern() {
-//
-//    }
-//    private void drawIrregularHexPattern() {
-//        int c = 0;
-//        for (int x = 20; x < xSize - 20; x += 20) {
-//            for (int y = 20; y < ySize - 20; y += 20) {
-//                int xPos = x;
-//                int yPos = y;
-//                int n = 3;
-//                if (Math.random() < 0.33) xPos -= n;
-//                else if (Math.random() > 0.67) xPos += n;
-//                if (Math.random() < 0.33) yPos -= n;
-//                else if (Math.random() > 0.67) yPos += n;
-//
-//                int offset = (++c % 2 == 0 ? 10 : 0);
-//                int j = xPos + offset + yPos * ySize;
-//                cellState[j] = true;
-//                tryToActivateNeighbors[j] = true;
-//            }
-//        }
-//    }
-//
-//    private void drawGridPattern() {
-//        for (int xPos = 20; xPos < xSize - 20; xPos += 20) {
-//            for (int yPos = 20; yPos < ySize - 20; yPos += 20) {
-//                int j = xPos + yPos * ySize;
-//                cellState[j] = true;
-//                tryToActivateNeighbors[j] = true;
-//            }
-//        }
-//    }
-//
-//    private void drawWeirdPhylloPattern() {
-//        double n = 0; // ordering number of object
-//        double phi; // divergence phiAngle
-//        double r; // radius from origin to object center
-//        double xPos, yPos; // shape positions
-//        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
-//        double C = 3; // scaling factor
-//        while (n < 1000) {
-//            phi = Math.toRadians(n * phiAngle);
-//            r = C * Math.sqrt(n);
-//            xPos = (300) + (r * Math.cos(phi));
-//            yPos = (300) + (r * Math.sin(phi));
-//            int j = (int) xPos * (int) yPos / 4;
-//            cellState[j] = true;
-//            tryToActivateNeighbors[j] = true;
-//            n++;
-//        }
-//    }
-//
-//    private void drawPhylloPattern() {
-//        double n = 0; // ordering number of object
-//        double phi; // divergence phiAngle
-//        double r; // radius from origin to object center
-//        double xPos, yPos; // shape positions
-//        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
-//        double C = 3; // scaling factor
-//        while (n < 600) {
-//            phi = Math.toRadians(n * phiAngle);
-//            r = C * Math.sqrt(n);
-//            xPos = (100) + (r * Math.cos(phi));
-//            yPos = (100) + (r * Math.sin(phi));
-//            int j = (int) xPos + (int) yPos * ySize;
-//            cellState[j] = true;
-//            tryToActivateNeighbors[j] = true;
-//            n++;
-//        }
-//    }
-//
-//
+    private void drawSingletonPattern() {
+        for (int i = 0; i < mState.getCellCount(); i++) {
+            int j = mSettings.getXSize() / 2 + mSettings.getXSize() * (mSettings.getYSize()) / 2;
+            mState.setCellState(j, true);
+            mState.setTryToActivateNeighbors(j, true);
+        }
+    }
+
+    private void drawHexPattern() {
+        int c = 0;
+        for (int xPos = 20; xPos < mSettings.getXSize() - 20; xPos += 20) {
+            for (int yPos = 20; yPos < mSettings.getYSize() - 20; yPos += 20) {
+                int offset = (++c % 2 == 0 ? 10 : 0);
+                int j = (int) xPos + offset + (int) yPos * mSettings.getYSize();
+                mState.setCellState(j, true);
+                mState.setTryToActivateNeighbors(j, true);
+            }
+        }
+    }
+
+    private void drawTortoiseShellPattern() {
+
+    }
+    private void drawIrregularHexPattern() {
+        int c = 0;
+        for (int x = 20; x < mSettings.getXSize() - 20; x += 20) {
+            for (int y = 20; y < mSettings.getYSize() - 20; y += 20) {
+                int xPos = x;
+                int yPos = y;
+                int n = 3;
+                if (Math.random() < 0.33) xPos -= n;
+                else if (Math.random() > 0.67) xPos += n;
+                if (Math.random() < 0.33) yPos -= n;
+                else if (Math.random() > 0.67) yPos += n;
+
+                int offset = (++c % 2 == 0 ? 10 : 0);
+                int j = xPos + offset + yPos * mSettings.getYSize();
+                mState.setCellState(j, true);
+                mState.setTryToActivateNeighbors(j, true);
+            }
+        }
+    }
+
+    private void drawGridPattern() {
+        for (int xPos = 20; xPos < mSettings.getXSize() - 20; xPos += 20) {
+            for (int yPos = 20; yPos < mSettings.getYSize() - 20; yPos += 20) {
+                int j = xPos + yPos * mSettings.getYSize();
+                mState.setCellState(j, true);
+                mState.setTryToActivateNeighbors(j, true);
+            }
+        }
+    }
+
+    private void drawWeirdPhylloPattern() {
+        double n = 0; // ordering number of object
+        double phi; // divergence phiAngle
+        double r; // radius from origin to object center
+        double xPos, yPos; // shape positions
+        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+        double C = 3; // scaling factor
+        while (n < 1000) {
+            phi = Math.toRadians(n * phiAngle);
+            r = C * Math.sqrt(n);
+            xPos = (300) + (r * Math.cos(phi));
+            yPos = (300) + (r * Math.sin(phi));
+            int j = (int) xPos * (int) yPos / 4;
+            mState.setCellState(j, true);
+            mState.setTryToActivateNeighbors(j, true);
+            n++;
+        }
+    }
+
+    private void drawPhylloPattern() {
+        double n = 0; // ordering number of object
+        double phi; // divergence phiAngle
+        double r; // radius from origin to object center
+        double xPos, yPos; // shape positions
+        double phiAngle = 137.5; // phiAngle multiplied by n to calculate phi
+        double C = 3; // scaling factor
+        while (n < 600) {
+            phi = Math.toRadians(n * phiAngle);
+            r = C * Math.sqrt(n);
+            xPos = (100) + (r * Math.cos(phi));
+            yPos = (100) + (r * Math.sin(phi));
+            int j = (int) xPos + (int) yPos * mSettings.getYSize();
+            mState.setCellState(j, true);
+            mState.setTryToActivateNeighbors(j, true);
+            n++;
+        }
+    }
+
+
 //    ///////////////////////
 //    //
 //    //CODE PLASTIC very cool
@@ -300,8 +279,8 @@ public class Tick {
 
     private void applyGradient() {
         List<Integer> cellsOn = new LinkedList<>();
-        int xsize = mControlFrame.getXSize();
-        int ysize = mControlFrame.getYSize();
+        int xsize = mSettings.getXSize();
+        int ysize = mSettings.getYSize();
 
         for (int y = 0; y < ysize; y++) {
 
@@ -309,7 +288,7 @@ public class Tick {
             cellsOn.clear();
             ;
             for (int x = 0; x < xsize; x++) {
-                int i = x + y * ySize;
+                int i = x + y * mSettings.getYSize();
                 if (mState.getCellState(i))
                     cellsOn.add(i);
             }
@@ -360,8 +339,8 @@ public class Tick {
 
 //    private void applyLinearGradient() {
 //        List<Integer> cellsOn = new LinkedList<>();
-//        int xsize = mControlFrame.getXSize();
-//        int ysize = mControlFrame.getYSize();
+//        int xsize = mSettings.getXSize();
+//        int ysize = mSettings.getYSize();
 //
 //        for(int y = ysize-1; y >= 0; y--) {
 //
@@ -537,11 +516,11 @@ public class Tick {
         try {
             //System.out.println("tick " + tickCount++);
             //getUserVars();//fetches values so they can be changed as it's running
-            double diffRate = DiffusionRate * 0.5; //allow user to use range of 0-1 but optimize calc speed
-            double diffRateDiag = DiffusionRate * 0.5 * 0.707;
-            double bDiffRate = bDiffusionRate * 0.5; //for B molecule if needed
-            double bDiffRateDiag = bDiffusionRate * 0.5 * 0.707;
-            double activationRateDiag = activationRate * 0.707;
+            double diffRate = mSettings.getDiffusionRate() * 0.5; //allow user to use range of 0-1 but optimize calc speed
+            double diffRateDiag = mSettings.getDiffusionRate() * 0.5 * 0.707;
+            double bDiffRate = mSettings.getBDiffusionRate() * 0.5; //for B molecule if needed
+            double bDiffRateDiag = mSettings.getBDiffusionRate() * 0.5 * 0.707;
+            double activationRateDiag = mSettings.getActivationRate() * 0.707;
             for (int t = 0; t < mState.getCellCount(); t++) {
                 //pick a cell
                 int cNum = (int) Math.floor(Math.random() * mState.getCellCount());
@@ -565,7 +544,7 @@ public class Tick {
                 }
 
 
-                if (bDiffusionRate > 0) {
+                if (mSettings.getBDiffusionRate() > 0) {
                     //diffuse molecule B at its own rate if necessary
                     dSelf = (mState.getCellB(cNum)) / totalNeighbors;
                     for (int i = 0; i < mState.getCellNeighbor(cNum).length; i++) {
@@ -590,13 +569,13 @@ public class Tick {
                         if (mState.getCellActivationDelay(cNum) > 0) {
                             mState.decrementCellActivationDelay(cNum);
                         } else {
-                            if (Math.random() < activationRate) {
+                            if (Math.random() < mSettings.getActivationRate()) {
                                 for (int i = 0; i < mState.getCellNeighbor(cNum).length; i++) {
                                     int nNum = mState.getCellNeighbor(cNum)[i];
-                                    if (!mState.getCellState(nNum) && mState.getCellA(nNum) >= activationThreshold) {//if this neighbor is off, turn it on if it can be
+                                    if (!mState.getCellState(nNum) && mState.getCellA(nNum) >= mSettings.getActivationThreshold()) {//if this neighbor is off, turn it on if it can be
                                         mState.setTryToActivateNeighbors(nNum, true);
                                         mState.setCellState(nNum, true);
-                                        mState.setCellActivationDelay(nNum, activationDelay);
+                                        mState.setCellActivationDelay(nNum, mSettings.getActivationDelay());
                                         //lifeTime[nNum]=maxLifeTime;
                                     }
                                 }
@@ -609,10 +588,10 @@ public class Tick {
                             if (Math.random() < activationRateDiag) {
                                 for (int i = 0; i < mState.getCellDiagNeighbor(cNum).length; i++) {
                                     int nNum = mState.getCellDiagNeighbor(cNum)[i];
-                                    if (!mState.getCellState(nNum) && mState.getCellA(nNum) >= activationThreshold) {//if this neighbor is off, turn it on if it can be
+                                    if (!mState.getCellState(nNum) && mState.getCellA(nNum) >= mSettings.getActivationThreshold()) {//if this neighbor is off, turn it on if it can be
                                         mState.setTryToActivateNeighbors(nNum, true);
                                         mState.setCellState(nNum, true);
-                                        mState.setCellActivationDelay(nNum, activationDelay);
+                                        mState.setCellActivationDelay(nNum, mSettings.getActivationDelay());
                                         //lifeTime[nNum]=maxLifeTime;
                                     }
                                 }
@@ -626,7 +605,7 @@ public class Tick {
                     }//try to activate neighbors
 
                     //shut off cell if it passes concentration thresholds or (fixme) if it has been on for a certain amount of time?
-                    if ((mState.getCellA(cNum) < shutoffAThreshold) || (mState.getCellB(cNum) > shutoffBThreshold)) {
+                    if ((mState.getCellA(cNum) < mSettings.getShutoffAThreshold()) || (mState.getCellB(cNum) > mSettings.getShutoffBThreshold())) {
                         mState.setCellState(cNum, false);
                         mState.setTryToActivateNeighbors(cNum, false);
                     } else {
@@ -638,7 +617,7 @@ public class Tick {
 
                 //react A into B if present
                 if (mState.getCellState(cNum) && mState.getCellA(cNum) > 0) {
-                    double amt = mState.getCellA(cNum) * mState.getCellA(cNum) * reactionRate;
+                    double amt = mState.getCellA(cNum) * mState.getCellA(cNum) * mSettings.getReactionRate();
                     mState.decrementCellA(cNum, amt);//convert A into B
                     mState.incrementCellB(cNum, amt);
                 }
@@ -646,21 +625,21 @@ public class Tick {
                 //fixme: make cells shut off if their A level is below a certain amount or if B rises above a certain amount.
 
                 //replenish A if needed:
-                if ((aReplenish > 0.0) && (mState.getCellA(cNum) < 1.0))
-                    mState.incrementCellA(cNum, aReplenish);
+                if ((mSettings.getAReplenish() > 0.0) && (mState.getCellA(cNum) < 1.0))
+                    mState.incrementCellA(cNum, mSettings.getAReplenish());
 
-                if ((aReplenish < 1.0) && (mState.getCellB(cNum) > 0))
-                    mState.multiplyCellB(cNum, bDecay);
+                if ((mSettings.getAReplenish() < 1.0) && (mState.getCellB(cNum) > 0))
+                    mState.multiplyCellB(cNum, 1.0-mSettings.getBDecay());
             }
 
-//            for(int col=0; col<ySize; col++) {
-//                int row = 10;
-//                int i = row + col * ySize;
-//                System.out.print(String.format("%2d,%-2d %s ", (int)(cellA[i]*10), (int)(cellB[i]*10), (cellState[i]?"*":" ")));
-//            }
-//            System.out.println();
+            for(int col=0; col<mSettings.getXSize(); col++) {
+                int row = 10;
+                int i = row + col * mSettings.getYSize();
+                System.out.print(String.format("%2d,%-2d %s ", (int)(mState.getCellA(i)*10), (int)(mState.getCellB(i)*10), (mState.getCellState(i)?"*":" ")));
+            }
+            System.out.println();
 
-            if (tickCount % drawEvery == 0 || !doDiffusion) {
+            if (tickCount % mSettings.getDrawEvery() == 0 || !doDiffusion) {
                 mainDraw();
                 //also check to see if all cells are off, if not a single cell is on, the simulation is over
 //                boolean simEnded = true;
@@ -682,13 +661,14 @@ public class Tick {
     private double lastThreshold = 0.0;
 
     private void checkThreshold() {
-        pigmentThreshold = mControlFrame.getPigmentThreshold();
-        if (lastThreshold != pigmentThreshold) {
-            lastThreshold = pigmentThreshold;
-        }
-        useGiraffeColors = mControlFrame.drawInGiraffeColors();
-        drawScaled = mControlFrame.drawScaledToMax();
-        showCellStates = mControlFrame.showCellStates();
+        //TODO pk fix this
+//        mSettings.setPigmentThreshold(mSettings.getPigmentThreshold());
+//        if (lastThreshold != pigmentThreshold) {
+//            lastThreshold = pigmentThreshold;
+//        }
+//        useGiraffeColors = mSettings.drawInGiraffeColors();
+//        drawScaled = mSettings.drawScaledToMax();
+//        showCellStates = mSettings.showCellStates();
     }
 
     //will diffuse the B molecule once to smooth out edges a little
@@ -719,34 +699,6 @@ public class Tick {
     }
 
     public void mainDraw() {
-        mGraphic.mainDraw(mState, mSettings);
+        mGraphic.mainDraw();
     }
-
-//    public int getCellCount() {
-//        return mState.getCellCount();
-//    }
-//
-//    public boolean getCellState(int i) {
-//        return cellState[i];
-//    }
-//
-//    public boolean getTryToActivateNeighbors(int i) {
-//        return tryToActivateNeighbors[i];
-//    }
-//
-//    public int getTickCount() {
-//        return tickCount;
-//    }
-//
-//    public double getStartA() {
-//        return startA;
-//    }
-//
-//    public double getCellA(int i) {
-//        return cellA[i];
-//    }
-//
-//    public double getCellB(int i) {
-//        return cellB[i];
-//    }
 }

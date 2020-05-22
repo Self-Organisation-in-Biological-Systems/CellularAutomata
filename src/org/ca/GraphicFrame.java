@@ -2,7 +2,6 @@ package org.ca;
 
 import org.ca.data.ModelSettings;
 import org.ca.data.ModelState;
-import org.ca.panels.ControlFrame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,25 +9,27 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class GraphicFrame extends JPanel {
-    JFrame mGraphicsFrame;
-    private ControlFrame mControlFrame;
+    private JFrame mGraphicsFrame;
+    private ModelState mState;
+    private ModelSettings mSettings;
     private BufferedImage mGiraffeImage;
 
     //private double scaleFactor=2.5;
 
-    public GraphicFrame(ControlFrame controlFrame) {
+    public GraphicFrame(ModelState state, ModelSettings settings) {
         mGraphicsFrame = new JFrame("Welcome to Giraffe World!");
-        mControlFrame = controlFrame;
+        mState = state;
+        mSettings = settings;
     }
 
     public void createGraphicFrame() {
-        mGiraffeImage = new BufferedImage(mControlFrame.getXSize(), mControlFrame.getYSize(),
+        mGiraffeImage = new BufferedImage(mSettings.getXSize(), mSettings.getYSize(),
                 BufferedImage.TYPE_INT_ARGB);
 
         mGraphicsFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mGraphicsFrame.setVisible(true);
-        //mGraphicsFrame.setSize((int)(mControlFrame.getXSize()*scaleFactor), (int)(mControlFrame.getYSize()*scaleFactor));
-        mGraphicsFrame.setSize((int)(mControlFrame.getXSize()), (int)(mControlFrame.getYSize()));
+        //mGraphicsFrame.setSize((int)(mSettings.getXSize()*scaleFactor), (int)(mSettings.getYSize()*scaleFactor));
+        mGraphicsFrame.setSize((int)(mSettings.getXSize()), (int)(mSettings.getYSize()));
 
         JPanel panel = new GiraffeJPanel();
         mGraphicsFrame.add(panel);
@@ -80,11 +81,11 @@ public class GraphicFrame extends JPanel {
     //--------------------------------- orig code -----------------------------------
 
     //main drawing routine, will branch to the selected drawing mode based on checkboxes and stuff
-    public void mainDraw(ModelState mState, ModelSettings mSettings) {
-        if (mControlFrame.drawInGiraffeColors()) {
-            drawAsGiraffe(mState);
-        } else if (mControlFrame.drawScaledToMax()) {
-            drawAsScaled(mState);
+    public void mainDraw() {
+        if (mSettings.drawInGiraffeColors()) {
+            drawAsGiraffe();
+        } else if (mSettings.drawScaledToMax()) {
+            drawAsScaled();
         } else {
             int x = 0;
             int y = 0;
@@ -92,7 +93,7 @@ public class GraphicFrame extends JPanel {
             int g = 0;
             int b = 0;
 
-            if (mControlFrame.showCellStates()) {
+            if (mSettings.showCellStates()) {
                 for (int i = 0; i < mState.getCellCount(); i++) {
                     if (mState.getCellState(i)) {
                         if (!mState.tryToActivateNeighbors(i)) { r=0; g=255; b=255; }
@@ -100,7 +101,7 @@ public class GraphicFrame extends JPanel {
                     } else { r=0; g=0; b=0; }
                     mGiraffeImage.setRGB(x, y, new Color(r,g,b).getRGB());
                     x++; //track cell location where we are drawing
-                    if (x >= mControlFrame.getXSize()) {
+                    if (x >= mSettings.getXSize()) {
                         x = 0;
                         y++;
                     }
@@ -126,7 +127,7 @@ public class GraphicFrame extends JPanel {
 
                     mGiraffeImage.setRGB(x, y, new Color(c1,c1,c2).getRGB());
                     x++; //track cell location where we are drawing
-                    if (x >= mControlFrame.getXSize()) {
+                    if (x >= mSettings.getXSize()) {
                         x = 0;
                         y++;
                     }
@@ -138,9 +139,9 @@ public class GraphicFrame extends JPanel {
         mGraphicsFrame.repaint();
     }
 
-    private void drawAsGiraffe(ModelState mState) {
-        if (mControlFrame.getPigmentThreshold() > 0) {
-            drawWithThresholds(mState);
+    private void drawAsGiraffe() {
+        if (mSettings.getPigmentThreshold() > 0) {
+            drawWithThresholds();
             return;
         }
         int x = 0;
@@ -148,24 +149,27 @@ public class GraphicFrame extends JPanel {
         ///rgb for a giraffe brownish hcolor = 209 111 46
         for (int i = 0; i < mState.getCellCount(); i++) {
             int r = 255 - (int)(Math.floor(mState.getCellB(i) * 46));
-            if (r < 209) r = 209;
+            if (r < 209)
+                r = 209;
             int g = 255 - (int)(Math.floor(mState.getCellB(i) * 145));
-            if (g < 111) g = 111;
+            if (g < 111)
+                g = 111;
             int b = 255 - (int)(Math.floor(mState.getCellB(i) * 209));
-            if (b < 46) b = 46;
+            if (b < 46)
+                b = 46;
             mGiraffeImage.setRGB(x, y, new Color(r,g,b).getRGB());
             x++; //track cell location where we are drawing
-            if (x >= mControlFrame.getXSize()) {
+            if (x >= mSettings.getXSize()) {
                 x = 0;
                 y++;
             }
         }
     }
 
-    private void drawAsScaled(ModelState mState) {
+    private void drawAsScaled() {
         int histoBanding = 0; //mControlFrame.getBanding();
         if (histoBanding > 0) {
-            drawAsHisto(mState, histoBanding);
+            drawAsHisto(histoBanding);
         } else {
             int x = 0;
             int y = 0;
@@ -184,7 +188,7 @@ public class GraphicFrame extends JPanel {
                 mGiraffeImage.setRGB(x, y, new Color(g,g,g).getRGB());
 
                 x++; //track cell location where we are drawing
-                if (x >= mControlFrame.getXSize()) {
+                if (x >= mSettings.getXSize()) {
                     x = 0;
                     y++;
                 }
@@ -192,7 +196,7 @@ public class GraphicFrame extends JPanel {
         }
     }
 
-    private void drawWithThresholds(ModelState mState) {
+    private void drawWithThresholds() {
         int x = 0;
         int y = 0;
         int r = 0;
@@ -215,14 +219,14 @@ public class GraphicFrame extends JPanel {
 
             mGiraffeImage.setRGB(x, y, new Color(r,g,b).getRGB());
             x++; //track cell location where we are drawing
-            if (x >= mControlFrame.getXSize()) {
+            if (x >= mSettings.getXSize()) {
                 x = 0;
                 y++;
             }
         }
     }
 
-    private void drawAsHisto(ModelState mState, int histoBanding) {
+    private void drawAsHisto(int histoBanding) {
         int x = 0;
         int y = 0;
         int r = 0;
@@ -251,7 +255,7 @@ public class GraphicFrame extends JPanel {
             }
             mGiraffeImage.setRGB(x, y, new Color(r,g,b).getRGB());
             x++; //track cell location where we are drawing
-            if (x >= mControlFrame.getXSize()) {
+            if (x >= mSettings.getXSize()) {
                 x = 0;
                 y++;
             }

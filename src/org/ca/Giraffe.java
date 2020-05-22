@@ -2,7 +2,6 @@ package org.ca;
 
 import org.ca.data.ModelSettings;
 import org.ca.data.ModelState;
-import org.ca.panels.ControlFrame;
 
 public class Giraffe {
 
@@ -15,9 +14,9 @@ public class Giraffe {
         ModelSettings modelSettings = new ModelSettings();
         ModelState modelState = new ModelState(modelSettings);
 
-        ControlFrame controlFrame = new ControlFrame();
+        ControlFrame controlFrame = new ControlFrame(modelSettings);
 
-        GraphicFrame graphic = new GraphicFrame(controlFrame);
+        GraphicFrame graphic = new GraphicFrame(modelState, modelSettings);
         graphic.createGraphicFrame();
 
         Tick tick = new Tick(modelState, modelSettings, controlFrame, graphic);
