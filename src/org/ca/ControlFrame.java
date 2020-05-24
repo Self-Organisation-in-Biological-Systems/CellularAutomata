@@ -6,21 +6,20 @@ import org.ca.panels.*;
 import javax.swing.*;
 
 public class ControlFrame {
-    private ModelSettings mModelSettings;
+    private ModelSettings mSettings;
     private StartPanel startPanel;
-    private Colors colorsPanel;
+    private ColorsPanel colorsPanel;
     private ModelSettingsPanel modelSettingsPanel;
-    private Patterns patternsPanel;
+    private PatternsPanel patternsPanel;
 
     public ControlFrame(ModelSettings settings) {
-        mModelSettings = settings;
+        mSettings = settings;
 
         JFrame f = new JFrame("Giraffe pattern");
         JTabbedPane jTabbedPane = new javax.swing.JTabbedPane();
         JPanel jPanel1 = new javax.swing.JPanel();
         JPanel jPanel2 = new javax.swing.JPanel();
         JPanel jPanel3 = new javax.swing.JPanel();
-        JPanel jPanel4 = new javax.swing.JPanel();
         JPanel jPanel5 = new javax.swing.JPanel();
 
         f.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -30,15 +29,15 @@ public class ControlFrame {
         jTabbedPane.addTab("Run", startPanel);
 
         jPanel2.setLayout(null);
-        colorsPanel = new Colors();
+        colorsPanel = new ColorsPanel(mSettings);
         jTabbedPane.addTab("Colors", colorsPanel);
 
         jPanel5.setLayout(null);
-        patternsPanel = new Patterns();
+        patternsPanel = new PatternsPanel(mSettings);
         jTabbedPane.addTab("Patterns", patternsPanel);
 
         jPanel3.setLayout(null);
-        modelSettingsPanel = new ModelSettingsPanel(mModelSettings);
+        modelSettingsPanel = new ModelSettingsPanel(mSettings);
         jTabbedPane.addTab("Cellular Automata Settings", modelSettingsPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(f.getContentPane());
@@ -56,5 +55,9 @@ public class ControlFrame {
         f.pack();
         f.setVisible(true);
     }
-    public void addButtonActionListeners(Tick tick) { startPanel.addButtonActionListeners(tick); }
+
+    public void addButtonActionListeners(Tick tick) {
+        startPanel.addButtonActionListeners(tick);
+        patternsPanel.addButtonActionListeners(mSettings);
+    }
 }

@@ -37,6 +37,15 @@ public class GraphicFrame extends JPanel {
         mGraphicsFrame.repaint();
     }
 
+    public void clear() {
+        Graphics2D g = mGiraffeImage.createGraphics();
+        g.setBackground(new Color(0, 0, 0, 0));
+        g.clearRect(0, 0, mSettings.getXSize(), mSettings.getYSize());
+        g.dispose();
+        mGraphicsFrame.validate();
+        mGraphicsFrame.repaint();
+    }
+
     class GiraffeJPanel extends JPanel {
         //@Override
         public void paintComponent(Graphics g) {
@@ -82,9 +91,9 @@ public class GraphicFrame extends JPanel {
 
     //main drawing routine, will branch to the selected drawing mode based on checkboxes and stuff
     public void mainDraw() {
-        if (mSettings.drawInGiraffeColors()) {
+        if (mSettings.getDrawInGiraffeColors()) {
             drawAsGiraffe();
-        } else if (mSettings.drawScaledToMax()) {
+        } else if (mSettings.getDrawScaledToMax()) {
             drawAsScaled();
         } else {
             int x = 0;
@@ -93,7 +102,7 @@ public class GraphicFrame extends JPanel {
             int g = 0;
             int b = 0;
 
-            if (mSettings.showCellStates()) {
+            if (mSettings.getShowCellStates()) {
                 for (int i = 0; i < mState.getCellCount(); i++) {
                     if (mState.getCellState(i)) {
                         if (!mState.tryToActivateNeighbors(i)) { r=0; g=255; b=255; }

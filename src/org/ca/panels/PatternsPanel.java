@@ -1,12 +1,10 @@
 package org.ca.panels;
 
+import org.ca.data.ModelSettings;
 import javax.swing.*;
-
 import java.awt.*;
 
-import static javax.swing.GroupLayout.Alignment.LEADING;
-
-public class Patterns extends JPanel {
+public class PatternsPanel extends JPanel {
     private final ButtonGroup buttonGroup;
 
     private JRadioButton giraffePatternButton;
@@ -19,7 +17,7 @@ public class Patterns extends JPanel {
     private JRadioButton concentricCirclePatternButton;
     private JCheckBox gradientCheckBox;
 
-    public Patterns() {
+    public PatternsPanel(ModelSettings settings) {
         buttonGroup = new ButtonGroup();
 
         giraffePatternButton = new JRadioButton("Giraffe pattern");
@@ -77,38 +75,30 @@ public class Patterns extends JPanel {
         gbc.gridy++;
         add(gradientCheckBox, gbc);
 
-        setValues();
+        setValues(settings);
     }
 
-    private void setValues() {
-        giraffePatternButton.setSelected(true);
-        singletonPatternButton.setSelected(false);
-        weirdPhylloPatternButton.setSelected(false);
-        phylloPatternButton.setSelected(false);
-        gridPatternButton.setSelected(false);
-        hexPatternButton.setSelected(false);
-        irregularHexPatternButton.setSelected(false);
-        concentricCirclePatternButton.setSelected(false);
+    private void setValues(ModelSettings settings) {
+        giraffePatternButton.setSelected(settings.getDrawGiraffePattern());
+        singletonPatternButton.setSelected(settings.getDrawSingletonPattern());
+        weirdPhylloPatternButton.setSelected(settings.getDrawWeirdPhylloPattern());
+        phylloPatternButton.setSelected(settings.getDrawPhylloPattern());
+        gridPatternButton.setSelected(settings.getDrawGridPattern());
+        hexPatternButton.setSelected(settings.getDrawHexPattern());
+        irregularHexPatternButton.setSelected(settings.getDrawIrregularHexPattern());
+        concentricCirclePatternButton.setSelected(settings.getDrawConcentricCirclePattern());
 
         gradientCheckBox.setSelected(false);
     }
 
-    public boolean drawGiraffePattern() {
-        return giraffePatternButton.isSelected();
+    public void addButtonActionListeners(ModelSettings settings) {
+        giraffePatternButton.addActionListener(e -> settings.drawGiraffePattern());
+        singletonPatternButton.addActionListener(e -> settings.drawSingletonPattern());
+        weirdPhylloPatternButton.addActionListener(e -> settings.drawWeirdPhylloPattern());
+        phylloPatternButton.addActionListener(e -> settings.drawPhylloPattern());
+        gridPatternButton.addActionListener(e -> settings.drawGridPattern());
+        hexPatternButton.addActionListener(e -> settings.drawHexPattern());
+        irregularHexPatternButton.addActionListener(e -> settings.drawIrregularHexPattern());
+        concentricCirclePatternButton.addActionListener(e -> settings.drawConcentricCirclePattern());
     }
-    public boolean drawSingletonPattern() {
-        return singletonPatternButton.isSelected();
-    }
-    public boolean drawWeirdPhylloPattern() {
-        return weirdPhylloPatternButton.isSelected();
-    }
-    public boolean drawPhylloPattern() {
-        return phylloPatternButton.isSelected();
-    }
-    public boolean drawGridPattern() { return gridPatternButton.isSelected(); }
-    public boolean drawHexPattern() { return hexPatternButton.isSelected(); }
-    public boolean drawIrregularHexPattern() { return irregularHexPatternButton.isSelected(); }
-    public boolean drawConcentricCirclePattern() { return concentricCirclePatternButton.isSelected(); }
-
-    public boolean applyGradient() { return gradientCheckBox.isSelected(); }
 }

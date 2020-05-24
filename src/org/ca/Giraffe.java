@@ -2,6 +2,7 @@ package org.ca;
 
 import org.ca.data.ModelSettings;
 import org.ca.data.ModelState;
+import org.ca.data.Patterns;
 
 public class Giraffe {
 
@@ -16,10 +17,12 @@ public class Giraffe {
 
         ControlFrame controlFrame = new ControlFrame(modelSettings);
 
+        Patterns patterns = new Patterns(modelSettings, modelState);
+
         GraphicFrame graphic = new GraphicFrame(modelState, modelSettings);
         graphic.createGraphicFrame();
 
-        Tick tick = new Tick(modelState, modelSettings, controlFrame, graphic);
+        Tick tick = new Tick(modelState, modelSettings, patterns, graphic);
         controlFrame.addButtonActionListeners(tick);
     }
 }

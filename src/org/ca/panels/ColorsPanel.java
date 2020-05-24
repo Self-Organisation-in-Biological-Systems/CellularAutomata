@@ -1,19 +1,17 @@
 package org.ca.panels;
 
+import org.ca.data.ModelSettings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 
 import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
-public class Colors extends JPanel {
-    private boolean drawInGiraffColors = true;
-    private boolean drawScaledToMax = false;
-    private int banding = 0;
-    private boolean showCellStates = true;
-
+public class ColorsPanel extends JPanel {
     private JCheckBox drawInGiraffeColorsCheckBox = new JCheckBox("Draw in Giraffe colors");
     private JCheckBox drawScaledToMaxCheckBox = new JCheckBox("Draw scaled to max");
 
@@ -23,8 +21,8 @@ public class Colors extends JPanel {
     private JLabel bandingLabel = new JLabel("Banding:", JLabel.RIGHT);
     private JTextField bandingTextField = new JTextField(5);
 
-    public Colors() {
-        this.setBorder(BorderFactory.createEmptyBorder());
+    public ColorsPanel(ModelSettings settings) {
+        setBorder(BorderFactory.createEmptyBorder());
 
             GroupLayout layout = new GroupLayout(this);
             setLayout(layout);
@@ -47,24 +45,20 @@ public class Colors extends JPanel {
                             .addComponent(showCellStatesCheckBox)
             );
 
-        setValues();
+        setValues(settings);
+        addButtonActionListeners(settings);
     }
 
-    private void setValues() {
-        drawInGiraffeColorsCheckBox.setSelected(drawInGiraffColors);
-        drawScaledToMaxCheckBox.setSelected(drawScaledToMax);
-        showCellStatesCheckBox.setSelected(showCellStates);
+    private void setValues(ModelSettings settings) {
+        drawInGiraffeColorsCheckBox.setSelected(settings.getDrawInGiraffeColors());
+        drawScaledToMaxCheckBox.setSelected(settings.getDrawScaledToMax());
+        showCellStatesCheckBox.setSelected(settings.getShowCellStates());
     }
 
-    public boolean drawInGiraffeColors() {
-        return drawInGiraffeColorsCheckBox.isSelected();
-    }
+    public void addButtonActionListeners(ModelSettings settings) {
+        drawInGiraffeColorsCheckBox.addItemListener(e -> settings.drawInGiraffeColors(e.getStateChange() == ItemEvent.SELECTED));
+        drawScaledToMaxCheckBox.addItemListener(e -> settings.drawScaledToMax(e.getStateChange() == ItemEvent.SELECTED));
+        showCellStatesCheckBox.addItemListener(e -> settings.showCellStates(e.getStateChange() == ItemEvent.SELECTED));
 
-    public boolean drawScaledToMax() {
-        return drawScaledToMaxCheckBox.isSelected();
-    }
-
-    public boolean showCellStates() {
-        return showCellStatesCheckBox.isSelected();
     }
 }

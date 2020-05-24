@@ -63,247 +63,231 @@ public class ModelSettings {
         setShutoffAThreshold(-1); //thee values will keep them from shutting off from thresholds
         setShutoffBThreshold(10);
 
-        setDrawGiraffePattern(true);
-        setDrawSingletonPattern(false);
-        setDrawWeirdPhylloPattern(false);
-        setDrawPhylloPattern(false);
-        setDrawGridPattern(false);
-        setDrawHexPattern(false);
-        setDrawIrregularHexPattern(false);
-        setDrawConcentricCirclePattern(false);
-        setApplyGradient(false);
+        drawGiraffePattern();
 
-        setDrawInGiraffeColors(true);
-        setDrawScaledToMax(true);
-        setShowCellStates(false);
+        drawInGiraffeColors(true);
+        drawScaledToMax(false);
+        showCellStates(true);
     }
 
+    //--------settings---------
 
     public int getXSize() {
         return mXSize;
     }
-
     public void setXSize(int xSize) {
         this.mXSize = xSize;
     }
-
     public int getYSize() {
         return mYSize;
     }
-
     public void setYSize(int ySize) {
         this.mYSize = ySize;
     }
-
     public double getStartA() {
         return mStartA;
     }
-
     public void setStartA(double startA) {
         this.mStartA = startA;
     }
-
     public double getAReplenish() {
         return mAReplenish;
     }
-
     public void setAReplenish(double aReplenish) {
         this.mAReplenish = aReplenish;
     }
-
     public double getBDecay() {
         return mBDecay;
     }
-
     public void setBDecayRate(double bDecay) {
         this.mBDecay = bDecay;
     }
-
     public double getStartOnPercent() {
         return mStartOnPercent;
     }
-
     public void setStartOnPercent(double startOnPercent) {
         this.mStartOnPercent = startOnPercent;
     }
-
     public double getDiffusionRate() {
         return mDiffusionRate;
     }
-
     public void setDiffusionRate(double diffusionRate) {
         this.mDiffusionRate = diffusionRate;
     }
-
     public double getBDiffusionRate() {
         return mBDiffusionRate;
     }
-
     public void setBDiffusionRate(double bDiffusionRate) {
         this.mBDiffusionRate = bDiffusionRate;
     }
-
     public double getReactionRate() {
         return mReactionRate;
     }
-
     public void setReactionRate(double reactionRate) {
         this.mReactionRate = reactionRate;
     }
-
     public double getActivationRate() {
         return mActivationRate;
     }
-
     public void setActivationRate(double activationRate) {
         this.mActivationRate = activationRate;
     }
-
     public double getActivationThreshold() {
         return mActivationThreshold;
     }
-
     public void setActivationThreshold(double activationThreshold) {
         this.mActivationThreshold = activationThreshold;
     }
-
     public double getActivationDelay() {
         return mActivationDelay;
     }
-
     public void setActivationDelay(double activationDelay) {
         this.mActivationDelay = activationDelay;
     }
-
     public int getDrawEvery() {
         return mDrawEvery;
     }
-
     public void setDrawEvery(int drawEvery) {
         this.mDrawEvery = drawEvery;
     }
-
     public int getMaxLifeTime() {
         return mMaxLifeTime;
     }
-
     public void setMaxLifeTime(int maxLifeTime) {
         this.mMaxLifeTime = maxLifeTime;
     }
-
     public int getShutoffAThreshold() {
         return mShutoffAThreshold;
     }
-
     public void setShutoffAThreshold(int shutoffAThreshold) {
         this.mShutoffAThreshold = shutoffAThreshold;
     }
-
     public int getShutoffBThreshold() {
         return mShutoffBThreshold;
     }
-
     public void setShutoffBThreshold(int shutoffBThreshold) {
         this.mShutoffBThreshold = shutoffBThreshold;
     }
-
     public double getPigmentThreshold() { return mPigmentThreshold; }
-
     public void setPigmentThreshold(double threshold) {mPigmentThreshold = threshold; }
 
-    public boolean showCellStates() {
+
+    //--------colors---------
+
+    public void showCellStates(boolean show) {
+        mShowCellStates = show;
+    }
+
+    public boolean getShowCellStates() {
         return mShowCellStates;
     }
 
-    public void setShowCellStates(boolean showCellStates) {
-        mShowCellStates = showCellStates;
+    public void drawInGiraffeColors(boolean grf) {
+        mDrawInGiraffeColors = grf;
     }
 
-    public boolean drawInGiraffeColors() {
+    public boolean getDrawInGiraffeColors() {
         return mDrawInGiraffeColors;
     }
 
-    public void setDrawInGiraffeColors(boolean drawInGiraffeColors) {
-        mDrawInGiraffeColors = drawInGiraffeColors;
+    public void  drawScaledToMax(boolean scale) {
+        mDrawScaledToMax = scale;
     }
 
-    public boolean drawScaledToMax() {
+    public boolean getDrawScaledToMax() {
         return mDrawScaledToMax;
     }
 
-    public void setDrawScaledToMax(boolean drawScaledToMax) {
-        mDrawScaledToMax = drawScaledToMax;
+    //--------patterns---------
+
+    private void resetPatterns() {
+        mDrawGiraffePattern = false;
+        mDrawSingletonPattern = false;
+        mDrawWeirdPhylloPattern = false;
+        mDrawPhylloPattern = false;
+        mDrawGridPattern = false;
+        mDrawHexPattern = false;
+        mDrawIrregularHexPattern = false;
+        mDrawConcentricCirclePattern = false;
+        mApplyGradient = false;
     }
 
-    public boolean drawGiraffePattern() {
+    public void drawGiraffePattern() {
+        resetPatterns();
+        mDrawGiraffePattern = true;
+    }
+
+    public boolean getDrawGiraffePattern() {
         return mDrawGiraffePattern;
     }
 
-    public void setDrawGiraffePattern(boolean drawGiraffePattern) {
-        mDrawGiraffePattern = drawGiraffePattern;
+    public void drawSingletonPattern() {
+        resetPatterns();
+        mDrawSingletonPattern = true;
     }
 
-    public boolean drawSingletonPattern() {
+    public boolean getDrawSingletonPattern() {
         return mDrawSingletonPattern;
     }
 
-    public void setDrawSingletonPattern(boolean drawSingletonPattern) {
-        mDrawSingletonPattern = drawSingletonPattern;
+    public void drawWeirdPhylloPattern() {
+        resetPatterns();
+        mDrawWeirdPhylloPattern = true;
     }
 
-    public boolean drawWeirdPhylloPattern() {
+    public boolean getDrawWeirdPhylloPattern() {
         return mDrawWeirdPhylloPattern;
     }
 
-    public void setDrawWeirdPhylloPattern(boolean drawWeirdPhylloPattern) {
-        mDrawWeirdPhylloPattern = drawWeirdPhylloPattern;
+    public void drawPhylloPattern() {
+        resetPatterns();
+        mDrawPhylloPattern = true;
     }
 
-    public boolean drawPhylloPattern() {
+    public boolean getDrawPhylloPattern() {
         return mDrawPhylloPattern;
     }
 
-    public void setDrawPhylloPattern(boolean drawPhylloPattern) {
-        mDrawPhylloPattern = drawPhylloPattern;
+    public void drawGridPattern() {
+        resetPatterns();
+        mDrawGridPattern = true;
     }
-
-    public boolean drawGridPattern() {
+    public boolean getDrawGridPattern() {
         return mDrawGridPattern;
     }
 
-    public void setDrawGridPattern(boolean drawGridPattern) {
-        mDrawGridPattern = drawGridPattern;
+    public void drawHexPattern() {
+        resetPatterns();
+        mDrawHexPattern = true;
     }
 
-    public boolean drawHexPattern() {
+    public boolean getDrawHexPattern() {
         return mDrawHexPattern;
     }
 
-    public void setDrawHexPattern(boolean drawHexPattern) {
-        mDrawHexPattern = drawHexPattern;
+    public void drawIrregularHexPattern() {
+        resetPatterns();
+        mDrawIrregularHexPattern = true;
     }
 
-    public boolean drawIrregularHexPattern() {
+    public boolean getDrawIrregularHexPattern() {
         return mDrawIrregularHexPattern;
     }
 
-    public void setDrawIrregularHexPattern(boolean drawIrregularHexPattern) {
-        mDrawIrregularHexPattern = drawIrregularHexPattern;
+    public void drawConcentricCirclePattern() {
+        resetPatterns();
+        mDrawConcentricCirclePattern = true;
     }
 
-    public boolean drawConcentricCirclePattern() {
+    public boolean getDrawConcentricCirclePattern() {
         return mDrawConcentricCirclePattern;
     }
 
-    public void setDrawConcentricCirclePattern(boolean drawConcentricCirclePattern) {
-        mDrawConcentricCirclePattern = drawConcentricCirclePattern;
+    public void applyGradient(boolean apply) {
+        mApplyGradient = apply;
     }
 
-    public boolean applyGradient() {
+    public boolean getApplyGradient() {
         return mApplyGradient;
-    }
-
-    public void setApplyGradient(boolean applyGradient) {
-        mApplyGradient = applyGradient;
     }
 }
