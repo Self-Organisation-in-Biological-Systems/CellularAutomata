@@ -16,6 +16,10 @@ public class ModelState {
     private boolean[] tryToActivateNeighbors; //true for only the first time it is turned on, then set to false
 
     public ModelState(ModelSettings modelSettings) {
+        reset(modelSettings);
+    }
+
+    public void reset(ModelSettings modelSettings) {
         cellCount = modelSettings.getXSize() * modelSettings.getYSize();
         cellA = new double[cellCount];
         cellB = new double[cellCount];

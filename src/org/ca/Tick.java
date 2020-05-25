@@ -52,10 +52,8 @@ public class Tick {
     }
 
     public void init() {
-        mGraphic.clear();
-
+        mState.reset(mSettings);
         mPatterns.getPattern();
-
         paused = false;
     }
 

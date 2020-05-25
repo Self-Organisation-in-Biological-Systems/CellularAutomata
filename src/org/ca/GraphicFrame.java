@@ -37,15 +37,6 @@ public class GraphicFrame extends JPanel {
         mGraphicsFrame.repaint();
     }
 
-    public void clear() {
-        Graphics2D g = mGiraffeImage.createGraphics();
-        g.setBackground(new Color(0, 0, 0, 0));
-        g.clearRect(0, 0, mSettings.getXSize(), mSettings.getYSize());
-        g.dispose();
-        mGraphicsFrame.validate();
-        mGraphicsFrame.repaint();
-    }
-
     class GiraffeJPanel extends JPanel {
         //@Override
         public void paintComponent(Graphics g) {
