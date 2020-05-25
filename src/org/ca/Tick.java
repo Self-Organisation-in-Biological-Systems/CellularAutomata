@@ -42,7 +42,7 @@ public class Tick {
     private boolean checkForGraphicsSizeChange() {
         boolean graphicsSizeChanged = false;
 
-        if(mSettings.getXSize() != oldXSize || mSettings.getXSize() != oldYSize)
+        if(mSettings.getXSize() != oldXSize || mSettings.getYSize() != oldYSize)
         graphicsSizeChanged = true;
 
         oldXSize = mSettings.getXSize();

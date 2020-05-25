@@ -4,13 +4,19 @@ import org.ca.data.ModelSettings;
 import org.ca.data.ModelSettingsIO;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.util.Objects;
 
 public class ModelSettingsPanel extends JPanel {
     private JLabel pigmentThresholdLabel1 = new JLabel("pigmentThreshold:", JLabel.RIGHT);
@@ -165,43 +171,61 @@ public class ModelSettingsPanel extends JPanel {
     }
 
     private void addTextActionListeners() {
-        addTextDoubleActionListener(pigmentThresholdTextField);
-        addTextIntegerActionListener(drawEveryNthCycleTextField);
-        addTextIntegerActionListener(xSizeTextField);
-        addTextIntegerActionListener(ySizeTextField);
-        addTextDoubleActionListener(startATextField);
-        addTextDoubleActionListener(startOnPercentTextField);
-        addTextDoubleActionListener(AReplenishTextField);
-        addTextDoubleActionListener(DiffusionRateTextField);
-        addTextDoubleActionListener(BDiffusionRateTextField);
-        addTextDoubleActionListener(BDecayRateTextField);
-        addTextDoubleActionListener(reactionRateTextField);
-        addTextDoubleActionListener(activationRateTextField);
-        addTextDoubleActionListener(activationThresholdTextField);
-        addTextDoubleActionListener(activationDelayTextField);
-        addTextIntegerActionListener(maxLifeTimeTextField);
-        addTextIntegerActionListener(shutoffAThresholdTextField);
-        addTextIntegerActionListener(shutoffBThresholdTextField);
+        addChangeListener(pigmentThresholdTextField, e -> mSettings.setPigmentThreshold(Double.parseDouble(pigmentThresholdTextField.getText())));
+        addChangeListener(drawEveryNthCycleTextField, e -> mSettings.setDrawEvery(Integer.parseInt(drawEveryNthCycleTextField.getText())));
+        addChangeListener(xSizeTextField, e -> mSettings.setXSize(Integer.parseInt(xSizeTextField.getText())));
+        addChangeListener(ySizeTextField, e -> mSettings.setYSize(Integer.parseInt(ySizeTextField.getText())));
+        addChangeListener(startATextField, e -> mSettings.setStartA(Double.parseDouble(startATextField.getText())));
+        addChangeListener(startOnPercentTextField, e -> mSettings.setStartOnPercent(Double.parseDouble(startOnPercentTextField.getText())));
+        addChangeListener(AReplenishTextField, e -> mSettings.setAReplenish(Double.parseDouble(AReplenishTextField.getText())));
+        addChangeListener(DiffusionRateTextField, e -> mSettings.setDiffusionRate(Double.parseDouble(DiffusionRateTextField.getText())));
+        addChangeListener(BDiffusionRateTextField, e -> mSettings.setBDiffusionRate(Double.parseDouble(BDiffusionRateTextField.getText())));
+        addChangeListener(BDecayRateTextField, e -> mSettings.setBDecayRate(Double.parseDouble(BDecayRateTextField.getText())));
+        addChangeListener(reactionRateTextField, e -> mSettings.setReactionRate(Double.parseDouble(reactionRateTextField.getText())));
+        addChangeListener(activationRateTextField, e -> mSettings.setActivationRate(Double.parseDouble(activationRateTextField.getText())));
+        addChangeListener(activationThresholdTextField, e -> mSettings.setActivationThreshold(Double.parseDouble(activationThresholdTextField.getText())));
+        addChangeListener(activationDelayTextField, e -> mSettings.setActivationDelay(Double.parseDouble(activationDelayTextField.getText())));
+        addChangeListener(maxLifeTimeTextField, e -> mSettings.setMaxLifeTime(Integer.parseInt(maxLifeTimeTextField.getText())));
+        addChangeListener(shutoffAThresholdTextField, e -> mSettings.setShutoffAThreshold(Integer.parseInt(shutoffAThresholdTextField.getText())));
+        addChangeListener(shutoffBThresholdTextField, e -> mSettings.setShutoffBThreshold(Integer.parseInt(shutoffBThresholdTextField.getText())));
     }
 
-    private void addTextDoubleActionListener(JTextField jTextField) {
-        jTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                mSettings.setPigmentThreshold(Double.parseDouble(jTextField.getText()));
-            }
-            public void removeUpdate(DocumentEvent e) {}
-            public void insertUpdate(DocumentEvent e) {}
-        });
-    }
+    public static void addChangeListener(JTextComponent text, ChangeListener changeListener) {
+        Objects.requireNonNull(text);
+        Objects.requireNonNull(changeListener);
+        DocumentListener dl = new DocumentListener() {
+            private int lastChange = 0, lastNotifiedChange = 0;
 
-    private void addTextIntegerActionListener(JTextField jTextField) {
-        jTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void changedUpdate(DocumentEvent e) {
-                mSettings.setPigmentThreshold(Integer.parseInt(jTextField.getText()));
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
             }
-            public void removeUpdate(DocumentEvent e) {}
-            public void insertUpdate(DocumentEvent e) {}
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                lastChange++;
+                SwingUtilities.invokeLater(() -> {
+                    if (lastNotifiedChange != lastChange) {
+                        lastNotifiedChange = lastChange;
+                        changeListener.stateChanged(new ChangeEvent(text));
+                    }
+                });
+            }
+        };
+        text.addPropertyChangeListener("document", (PropertyChangeEvent e) -> {
+            Document d1 = (Document)e.getOldValue();
+            Document d2 = (Document)e.getNewValue();
+            if (d1 != null) d1.removeDocumentListener(dl);
+            if (d2 != null) d2.addDocumentListener(dl);
+            dl.changedUpdate(null);
         });
+        Document d = text.getDocument();
+        if (d != null) d.addDocumentListener(dl);
     }
 
     private void addButton(GridBagConstraints c, int row, int col, JButton button) {
