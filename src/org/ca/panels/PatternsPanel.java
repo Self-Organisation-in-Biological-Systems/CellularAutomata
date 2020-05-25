@@ -3,6 +3,7 @@ package org.ca.panels;
 import org.ca.data.ModelSettings;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
 public class PatternsPanel extends JPanel {
     private final ButtonGroup buttonGroup;
@@ -100,5 +101,7 @@ public class PatternsPanel extends JPanel {
         hexPatternButton.addActionListener(e -> settings.drawHexPattern());
         irregularHexPatternButton.addActionListener(e -> settings.drawIrregularHexPattern());
         concentricCirclePatternButton.addActionListener(e -> settings.drawConcentricCirclePattern());
+
+        gradientCheckBox.addItemListener(e -> settings.applyGradient(e.getStateChange() == ItemEvent.SELECTED));
     }
 }

@@ -209,7 +209,6 @@ public class ModelSettings {
         mDrawHexPattern = false;
         mDrawIrregularHexPattern = false;
         mDrawConcentricCirclePattern = false;
-        mApplyGradient = false;
     }
 
     public void drawGiraffePattern() {

@@ -186,7 +186,7 @@ public class Patterns {
 
             //count cells on in each row
             cellsOn.clear();
-            ;
+
             for (int x = 0; x < xsize; x++) {
                 int i = x + y * mSettings.getYSize();
                 if (mState.getCellState(i))
