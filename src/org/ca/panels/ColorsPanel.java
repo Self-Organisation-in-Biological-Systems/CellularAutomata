@@ -3,12 +3,8 @@ package org.ca.panels;
 import org.ca.data.ModelSettings;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 
-import static javax.swing.GroupLayout.Alignment.BASELINE;
 import static javax.swing.GroupLayout.Alignment.LEADING;
 
 public class ColorsPanel extends JPanel {
@@ -56,9 +52,9 @@ public class ColorsPanel extends JPanel {
     }
 
     public void addButtonActionListeners(ModelSettings settings) {
-        drawInGiraffeColorsCheckBox.addItemListener(e -> settings.drawInGiraffeColors(e.getStateChange() == ItemEvent.SELECTED));
-        drawScaledToMaxCheckBox.addItemListener(e -> settings.drawScaledToMax(e.getStateChange() == ItemEvent.SELECTED));
-        showCellStatesCheckBox.addItemListener(e -> settings.showCellStates(e.getStateChange() == ItemEvent.SELECTED));
+        drawInGiraffeColorsCheckBox.addItemListener(e -> settings.setDrawInGiraffeColors(e.getStateChange() == ItemEvent.SELECTED));
+        drawScaledToMaxCheckBox.addItemListener(e -> settings.setDrawScaledToMax(e.getStateChange() == ItemEvent.SELECTED));
+        showCellStatesCheckBox.addItemListener(e -> settings.setShowCellStates(e.getStateChange() == ItemEvent.SELECTED));
 
     }
 }

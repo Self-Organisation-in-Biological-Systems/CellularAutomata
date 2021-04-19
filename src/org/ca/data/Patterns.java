@@ -31,8 +31,6 @@ public class Patterns {
             drawGridPattern();
         else if (mSettings.getDrawWeirdPhylloPattern())
             drawWeirdPhylloPattern();
-//        else if (mSettings.getDrawConcentricCirclePattern())
-//            drawConcentricCirclePattern();
         else if (mSettings.getDrawPhylloPattern())
             drawPhylloPattern();
 
@@ -134,11 +132,13 @@ public class Patterns {
         while (n < 600) {
             phi = Math.toRadians(n * phiAngle);
             r = C * Math.sqrt(n);
-            xPos = (100) + (r * Math.cos(phi));
-            yPos = (100) + (r * Math.sin(phi));
+            xPos = (200) + (r * Math.cos(phi));
+            yPos = (200) + (r * Math.sin(phi));
             int j = (int) xPos + (int) yPos * mSettings.getYSize();
-            mState.setCellState(j, true);
-            mState.setTryToActivateNeighbors(j, true);
+            if (j < mSettings.getXSize() * mSettings.getYSize()) {
+                mState.setCellState(j, true);
+                mState.setTryToActivateNeighbors(j, true);
+            }
             n++;
         }
     }
@@ -155,27 +155,7 @@ public class Patterns {
 //    //////////////////////
 //
 //
-//    private void drawConcentricCirclePattern() {
-////        Double[] radius = {0.0,0.1,0.2};
-////        Integer[] numberOfDots = {1,10,20};
-////        Double[] theta = new Double[3];
-////
-////        //get angles for each concentric circle
-////        for (int i=0; i<3; i++) {
-////            theta[i] = 2 * Math.PI/numberOfDots[i];
-////        }
-////
-////        for (int i=0; i<3; i++) {
-////            double radius = R[i];
-////            for (int i=0; i<3; i++) {
-////                double xPos = Math.round(R[i] * Math.cos(t[i]));
-////                double yPos = Math.round(R[i] * Math.sin(t[i]));
-////                int j = (int) xPos + (int) yPos * ySize;
-////                cellState[j] = true;
-////                tryToActivateNeighbors[j] = true;
-////            }
-////        }
-//    }
+
 
     private void applyGradient() {
         List<Integer> cellsOn = new LinkedList<>();

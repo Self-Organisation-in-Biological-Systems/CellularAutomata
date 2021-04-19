@@ -8,7 +8,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -97,7 +97,7 @@ public class ModelSettingsPanel extends JPanel {
 
     public ModelSettingsPanel(ModelSettings settings) {
         mSettings = settings;
-        mModelSettingsIO = settings.getModelSettingsIO();
+        mModelSettingsIO = new ModelSettingsIO(settings);
 
         setBorder(BorderFactory.createEmptyBorder());
 
@@ -133,8 +133,11 @@ public class ModelSettingsPanel extends JPanel {
         addButton(c, 18, 1, saveButton);
         addButton(c, 18, 2, resetButton);
 
-        fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(new ExtensionFileFilter("json", new String[] { "json" }));
+        fileChooser = new JFileChooser("/Users/paul/Desktop/IdeaProjects/CellularAutomata/settings");
+        fileChooser.setDialogTitle("Settings");
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Json",  "json");
+        fileChooser.addChoosableFileFilter(filter);
 
         addButtonActionListeners();
     }
@@ -160,7 +163,7 @@ public class ModelSettingsPanel extends JPanel {
         AReplenishTextField.setText(Double.toString(mSettings.getAReplenish()));
         DiffusionRateTextField.setText(Double.toString(mSettings.getDiffusionRate()));
         BDiffusionRateTextField.setText(Double.toString(mSettings.getBDiffusionRate()));
-        BDecayRateTextField.setText(Double.toString(mSettings.getBDecay()));
+        BDecayRateTextField.setText(Double.toString(mSettings.getBDecayRate()));
         reactionRateTextField.setText(Double.toString(mSettings.getReactionRate()));
         activationRateTextField.setText(Double.toString(mSettings.getActivationRate()));
         activationThresholdTextField.setText(Double.toString(mSettings.getActivationThreshold()));
@@ -242,6 +245,7 @@ public class ModelSettingsPanel extends JPanel {
                 File file = fileChooser.getSelectedFile();
                 try {
                     mModelSettingsIO.read(file);
+                    setValues();
                 } catch (Exception ex) {
                     System.out.println("problem accessing file"+file.getAbsolutePath());
                 }
@@ -264,39 +268,8 @@ public class ModelSettingsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mSettings.reset();
+                setValues();
             }
         });
-    }
-
-    class ExtensionFileFilter extends FileFilter {
-        String description;
-
-        String extensions[];
-
-        public ExtensionFileFilter(String description, String extensions[]) {
-            if (description == null) {
-                this.description = extensions[0];
-            } else {
-                this.description = description;
-            }
-            this.extensions = (String[]) extensions.clone();
-            toLower(this.extensions);
-        }
-
-        private void toLower(String array[]) {
-            for (int i = 0, n = array.length; i < n; i++) {
-                array[i] = array[i].toLowerCase();
-            }
-        }
-
-        @Override
-        public boolean accept(File f) {
-            return false;
-        }
-
-        @Override
-        public String getDescription() {
-            return null;
-        }
     }
 }

@@ -236,7 +236,7 @@ public class Tick {
                     mState.incrementCellA(cNum, mSettings.getAReplenish());
 
                 if ((mSettings.getAReplenish() < 1.0) && (mState.getCellB(cNum) > 0))
-                    mState.multiplyCellB(cNum, 1.0-mSettings.getBDecay());
+                    mState.multiplyCellB(cNum, 1.0-mSettings.getBDecayRate());
             }
 
 //            for(int col=0; col<mSettings.getXSize(); col++) {
